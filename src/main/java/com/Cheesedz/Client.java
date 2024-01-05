@@ -1,18 +1,43 @@
 package com.Cheesedz;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table
 public class Client {
+    @Id
+    @SequenceGenerator(
+            name = "student",
+            sequenceName = "student",
+            allocationSize = 1
+    )
+
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "student"
+    )
     private int id;
+    private String address;
     private String name;
     private String email;
-    private int age;
+    private String dob;
 
-    public Client(int id, String name, String email, int age) {
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Client(int id, String address, String name, String email, String dob) {
         this.id = id;
+        this.address = address;
         this.name = name;
         this.email = email;
-        this.age = age;
+        this.dob = dob;
     }
 
     public int getId() {
@@ -39,12 +64,12 @@ public class Client {
         this.email = email;
     }
 
-    public int getAge() {
-        return age;
+    public String getDob() {
+        return dob;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     @Override
@@ -52,12 +77,12 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id == client.id && age == client.age && Objects.equals(name, client.name) && Objects.equals(email, client.email);
+        return id == client.id && dob == client.dob && Objects.equals(name, client.name) && Objects.equals(email, client.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, age);
+        return Objects.hash(id, name, email, dob);
     }
 
     @Override
@@ -66,7 +91,7 @@ public class Client {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", age=" + age +
+                ", dob=" + dob +
                 '}';
     }
 }
