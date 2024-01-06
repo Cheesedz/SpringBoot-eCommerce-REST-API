@@ -10,7 +10,7 @@ public class Main {
     }
 
     record Client(
-            int id,
+            Long id,
             String address,
             String name,
             String email,

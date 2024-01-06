@@ -8,17 +8,10 @@ import java.util.Objects;
 @Table
 public class Client {
     @Id
-    @SequenceGenerator(
-            name = "student",
-            sequenceName = "student",
-            allocationSize = 1
-    )
-
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "student"
+            strategy = GenerationType.AUTO
     )
-    private int id;
+    private Long id;
     private String address;
     private String name;
     private String email;
@@ -31,20 +24,22 @@ public class Client {
     public void setAddress(String address) {
         this.address = address;
     }
+    public Client() {
 
-    public Client(int id, String address, String name, String email, String dob) {
-        this.id = id;
+    }
+
+    public Client(String address, String name, String email, String dob) {
         this.address = address;
         this.name = name;
         this.email = email;
         this.dob = dob;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
