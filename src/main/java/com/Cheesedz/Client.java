@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Client {
     @Id
     @GeneratedValue(
-            strategy = GenerationType.AUTO
+            strategy = GenerationType.SEQUENCE
     )
     private Long id;
     private String address;

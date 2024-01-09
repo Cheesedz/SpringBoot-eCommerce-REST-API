@@ -1,8 +1,7 @@
 package com.Cheesedz;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +17,25 @@ public class ClientController {
     @GetMapping
     public List<Client> getClient() {
         return service.getClient();
+    }
+
+    @PostMapping
+    public void registerNewClient(@RequestBody Client client) {
+        //service.addNewClient(client);
+        service.findClientByEmail(client);
+    }
+
+    @DeleteMapping(path = "{clientID}")
+    public void deleteClient(@PathVariable("clientID") Long clientID) {
+        service.deleteClient(clientID);
+    }
+
+    @PutMapping(path = "{clientID}")
+    public void updateClient(
+            @PathVariable("clientID") Long clientID,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email
+    ) {
+        service.updateClient(clientID, name, email);
     }
 }

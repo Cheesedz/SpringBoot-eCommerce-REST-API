@@ -26,7 +26,7 @@ public class ClientConfig {
                     "2004-07-02"
             );
 
-            repository.saveAll(List.of(cheesedz, windbow));
+            //repository.saveAll(List.of(cheesedz, windbow));
         };
     }
 }
