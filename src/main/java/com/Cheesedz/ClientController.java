@@ -1,12 +1,11 @@
 package com.Cheesedz;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/client")
+@RequestMapping(path = "/client")
 public class ClientController {
     private final ClientService service;
 
@@ -34,8 +33,10 @@ public class ClientController {
     public void updateClient(
             @PathVariable("clientID") Long clientID,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String dob,
+            @RequestParam(required = false) String phone
     ) {
-        service.updateClient(clientID, name, email);
+        service.updateClient(clientID, name, email, dob, phone);
     }
 }

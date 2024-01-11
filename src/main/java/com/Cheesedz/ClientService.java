@@ -3,7 +3,6 @@ package com.Cheesedz;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -25,7 +24,12 @@ public class ClientService {
     }
 
     public void addNewClient(Client client) {
-        System.out.println(client);
+        List<Client> cache = clientRepository.findAll();
+        if (!cache.contains(client)) {
+            clientRepository.save(client);
+        } else {
+            System.out.println("This client existed");
+        }
     }
 
     public void findClientByEmail(Client client) {
@@ -46,13 +50,21 @@ public class ClientService {
     }
 
     @Transactional
-    public void updateClient(Long clientID, String name, String email) {
+    public void updateClient(Long clientID, String name, String email, String dob, String phone) {
         Client client = clientRepository.findById(clientID).orElseThrow(
                 () -> new IllegalStateException("The client with ID: " + clientID + " does not exists")
         );
 
         if (name != null && name.length() > 0 && !Objects.equals(client.getName(), name)) {
             client.setName(name);
+        }
+
+        if (dob != null && dob.length() > 0 && !Objects.equals(client.getDob(), dob)) {
+            client.setDob(dob);
+        }
+
+        if (phone != null &&  phone.length() > 0 && !Objects.equals(client.getPhone(), phone)) {
+            client.setPhone(phone);
         }
 
         if (email != null && email.length() > 0 && !Objects.equals(client.getEmail(), email)) {

@@ -9,13 +9,34 @@ import java.util.Objects;
 public class Client {
     @Id
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
+            strategy = GenerationType.AUTO
     )
     private Long id;
     private String address;
     private String name;
     private String email;
     private String dob;
+    private String phone;
+
+    public Client() {
+
+    }
+
+    public Client(String address, String name, String email, String dob, String phone) {
+        this.address = address;
+        this.name = name;
+        this.email = email;
+        this.dob = dob;
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getAddress() {
         return address;
@@ -23,16 +44,6 @@ public class Client {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-    public Client() {
-
-    }
-
-    public Client(String address, String name, String email, String dob) {
-        this.address = address;
-        this.name = name;
-        this.email = email;
-        this.dob = dob;
     }
 
     public Long getId() {

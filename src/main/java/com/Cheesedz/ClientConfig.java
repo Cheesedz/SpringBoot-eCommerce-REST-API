@@ -4,8 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Configuration
 public class ClientConfig {
 
@@ -16,14 +14,16 @@ public class ClientConfig {
                     "Ha Noi",
                     "Nguyen Chi Nghia",
                     "22028232@vnu.edu.vn",
-                    "2004-06-08"
+                    "2004-06-08",
+                    "0932485923"
             );
 
             Client windbow = new Client(
                     "Ha Noi",
                     "Nguyen Viet Phong",
                     "22028231@vnu.edu.vn",
-                    "2004-07-02"
+                    "2004-07-02",
+                    "0932485923"
             );
 
             //repository.saveAll(List.of(cheesedz, windbow));
