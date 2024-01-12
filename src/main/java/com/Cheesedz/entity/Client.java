@@ -1,4 +1,4 @@
-package com.Cheesedz;
+package com.Cheesedz.entity;
 
 import jakarta.persistence.*;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Client {
     @Id
     @GeneratedValue(
-            strategy = GenerationType.AUTO
+            strategy = GenerationType.IDENTITY
     )
     private Long id;
     private String address;
