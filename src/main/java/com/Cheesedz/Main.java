@@ -12,9 +12,9 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @GetMapping("")
+    @GetMapping
     public String greeting() {
-        return "Hello";
+        return "index";
     }
 
     record Client(
