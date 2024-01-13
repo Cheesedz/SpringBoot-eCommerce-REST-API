@@ -1,25 +1,37 @@
 package com.Cheesedz.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "voucher", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "voucherName" })})
+@Data
+@NoArgsConstructor
+@Table(name = "voucher", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "voucherName")
     private String name;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "minimumOrderValue")
     private Double minimumOrderValue;
+
     @Column(name = "discountAmount")
     private Double discountAmount;
+
     @Column(name = "expirationDate")
     private String expirationDate;
-    public Voucher() {
 
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Voucher(String name, String description, Double minimumOrderValue, Double discountAmount, String expirationDate) {
         this.name = name;
@@ -29,44 +41,9 @@ public class Voucher {
         this.expirationDate = expirationDate;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getMinimumOrderValue() {
-        return minimumOrderValue;
-    }
-
-    public void setMinimumOrderValue(Double minimumOrderValue) {
-        this.minimumOrderValue = minimumOrderValue;
-    }
-
-    public Double getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public void setDiscountAmount(Double discountAmount) {
-        this.discountAmount = discountAmount;
-    }
-
-    public String getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(String expirationDate) {
-        this.expirationDate = expirationDate;
+    @JsonIgnore
+    public User getUser() {
+        return user;
     }
 
     @Override

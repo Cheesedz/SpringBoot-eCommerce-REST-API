@@ -3,7 +3,7 @@ package com.Cheesedz.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "categoryName", "id" })})
+@Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

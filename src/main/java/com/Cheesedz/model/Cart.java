@@ -1,53 +1,53 @@
 package com.Cheesedz.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "cart", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Cart {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @OneToOne
-    @JoinColumn(name = "cart")
-    private User owner;
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "numberOfProducts")
     private Long numberOfProducts;
-    @OneToMany
-    @JoinColumn(name = "belongTo")
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItems> items;
-    public Cart() {
 
-    }
-
-    public Cart(Long numberOfProducts, List<CartItems> items) {
-        this.numberOfProducts = numberOfProducts;
-        this.items = items;
-    }
-
+    @JsonIgnore
     public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
+        return user;
     }
 
     public Long getNumberOfProducts() {
         return numberOfProducts;
     }
 
-    public void setNumberOfProducts(Long numberOfProducts) {
-        this.numberOfProducts = numberOfProducts;
-    }
-
     public List<CartItems> getProductList() {
-        return items;
+        return this.items == null ? null : new ArrayList<>(this.items);
     }
 
     public void setProductList(List<CartItems> items) {
-        this.items = items;
+        if (items == null) {
+            this.items = null;
+        } else {
+            this.items = Collections.unmodifiableList(items);
+        }
     }
 
     @Override
