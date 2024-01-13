@@ -1,4 +1,4 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 

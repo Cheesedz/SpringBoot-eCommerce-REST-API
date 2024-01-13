@@ -1,7 +1,7 @@
 package com.Cheesedz.controller;
 
 import com.Cheesedz.service.ClientService;
-import com.Cheesedz.entity.Client;
+import com.Cheesedz.model.Client;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

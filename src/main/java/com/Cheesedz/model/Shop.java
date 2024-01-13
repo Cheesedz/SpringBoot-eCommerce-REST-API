@@ -1,34 +1,55 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-@Table(name = "shop")
+@Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "shopName" })})
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String name;
+    private String typeOfShop;
+    private String typeOfProduct;
     private String description;
     private Long followers;
     private Long following;
     private String joiningDate;
     private Double chatPerformance;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shopName", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> productList;
     public Shop() {
 
     }
 
-    public Shop(String name, String description, Long followers, Long following, String joiningDate, Double chatPerformance, List<Product> productList) {
+    public Shop(String name, String typeOfShop, String typeOfProduct, String description, Long followers,
+                Long following, String joiningDate, Double chatPerformance, List<Product> productList) {
         this.name = name;
+        this.typeOfShop = typeOfShop;
+        this.typeOfProduct = typeOfProduct;
         this.description = description;
         this.followers = followers;
         this.following = following;
         this.joiningDate = joiningDate;
         this.chatPerformance = chatPerformance;
         this.productList = productList;
+    }
+
+    public String getTypeOfShop() {
+        return typeOfShop;
+    }
+
+    public void setTypeOfShop(String typeOfShop) {
+        this.typeOfShop = typeOfShop;
+    }
+
+    public String getTypeOfProduct() {
+        return typeOfProduct;
+    }
+
+    public void setTypeOfProduct(String typeOfProduct) {
+        this.typeOfProduct = typeOfProduct;
     }
 
     public String getName() {
@@ -90,15 +111,12 @@ public class Shop {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        res.append("Shop[name=" + name + ","
-                + "description=" + description + ","
-                + "followers=" + followers + ","
-                + "following=" + following + ","
-                + "joiningDate=" + joiningDate + ","
-                + "chatPerformance=" + chatPerformance + "\n");
-        productList.forEach(x -> {
-            res.append(x.toString() + "\n");
-        });
+        res.append("Shop[name=").append(name).append(",").append("description=").append(description).append(",")
+                .append("followers=").append(followers).append(",").append("following=").append(following).append(",")
+                .append("typeOfShop=").append(typeOfShop).append(",").append("typeOfProduct=").append(typeOfProduct)
+                .append(",").append("joiningDate=").append(joiningDate).append(",").append("chatPerformance=")
+                .append(chatPerformance).append("\n");
+        productList.forEach(x -> res.append(x.toString()).append("\n"));
         return res.toString();
     }
 }

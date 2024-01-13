@@ -1,16 +1,21 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "voucher")
+@Table(name = "voucher", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "voucherName" })})
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "voucherName")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "minimumOrderValue")
     private Double minimumOrderValue;
+    @Column(name = "discountAmount")
     private Double discountAmount;
+    @Column(name = "expirationDate")
     private String expirationDate;
     public Voucher() {
 

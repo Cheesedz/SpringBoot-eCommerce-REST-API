@@ -1,6 +1,6 @@
 package com.Cheesedz.config;
 
-import com.Cheesedz.entity.Client;
+import com.Cheesedz.model.Client;
 import com.Cheesedz.repository.ClientRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
@@ -13,17 +13,19 @@ public class User {
     private String phone;
     private String gender;
     private String dob;
+    private Cart cart;
     public User() {
 
     }
 
-    public User(String username, String name, String email, String phone, String gender, String dob) {
+    public User(String username, String name, String email, String phone, String gender, String dob, Cart cart) {
         this.username = username;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.gender = gender;
         this.dob = dob;
+        this.cart = cart;
     }
 
     public String getUsername() {
@@ -74,6 +76,14 @@ public class User {
         this.dob = dob;
     }
 
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public String toString() {
         return "User[username=" + username + ","
@@ -81,6 +91,7 @@ public class User {
                 + "email=" + email + ","
                 + "phone=" + phone + ","
                 + "gender=" + gender + ","
+                + "cart=" + cart + ","
                 + "dob=" + dob + "]";
     }
 }

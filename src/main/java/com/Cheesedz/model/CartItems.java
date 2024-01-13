@@ -1,27 +1,33 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "selectedProduct")
-public class SelectedProduct {
+@Table(name = "cartItems",uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+public class CartItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
+    @Column(name = "type")
     private String type;
+    @Column(name = "totalPrice")
     private Double totalPrice;
+    @Column(name = "quantity")
     private Long quantity;
-    private Voucher appliedVoucher;
-    public SelectedProduct() {
+    @Column(name = "belongTo")
+    private Cart cart;
+    public CartItems() {
 
     }
 
-    public SelectedProduct(Product product, String type, Double totalPrice, Long quantity, Voucher appliedVoucher) {
+    public CartItems(Product product, String type, Double totalPrice, Long quantity) {
         this.product = product;
         this.type = type;
         this.totalPrice = product.getPrice() * quantity;
         this.quantity = quantity;
-        this.appliedVoucher = appliedVoucher;
     }
 
     public Product getProduct() {
@@ -39,9 +45,12 @@ public class SelectedProduct {
     public void setType(String type) {
         this.type = type;
     }
+    public void setTotalPrice(Product product, Long quantity) {
+        this.totalPrice = product.getPrice() * quantity;
+    }
 
     public Double getTotalPrice() {
-        return totalPrice;
+        return product.getPrice() * quantity;
     }
 
     public Long getQuantity() {
@@ -52,20 +61,11 @@ public class SelectedProduct {
         this.quantity = quantity;
     }
 
-    public Voucher getAppliedVoucher() {
-        return appliedVoucher;
-    }
-
-    public void setAppliedVoucher(Voucher appliedVoucher) {
-        this.appliedVoucher = appliedVoucher;
-    }
-
     @Override
     public String toString() {
         return "SelectedProduct[" + product.toString() + ","
                 + "type=" + type + ","
                 + "totalPrice=" + quantity * product.getPrice() + ","
-                + "quantity=" + quantity + ","
-                + "appliedVoucher=" + appliedVoucher + "]";
+                + "quantity=" + quantity + "]";
     }
 }

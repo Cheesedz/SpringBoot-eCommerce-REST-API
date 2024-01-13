@@ -1,14 +1,15 @@
-package com.Cheesedz.entity;
+package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "categoryName", "id" })})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "categoryName")
     private String name;
-    private String description;
+    @Column(name = "thumbnailPath")
     private String thumbnailPath;
     public Category() {
 
@@ -16,7 +17,6 @@ public class Category {
 
     public Category(String name, String description, String thumbnailPath) {
         this.name = name;
-        this.description = description;
         this.thumbnailPath = thumbnailPath;
     }
 
@@ -26,14 +26,6 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getThumbnailPath() {
@@ -47,7 +39,6 @@ public class Category {
     @Override
     public String toString() {
         return "Category[name=" + name + ","
-                + "description=" + description + ","
                 + "thumbnailPath=" + thumbnailPath + "]";
     }
 }
