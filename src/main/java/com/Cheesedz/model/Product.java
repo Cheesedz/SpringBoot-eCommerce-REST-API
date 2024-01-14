@@ -3,11 +3,10 @@ package com.Cheesedz.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "productName" })})
+@Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productName")
     private Long id;
     private String name;
 //    @OneToOne
@@ -25,12 +24,13 @@ public class Product {
     private Double rating;
     //@Column(name = "available")
     private Long available;
+    private String imgURL;
     public Product() {
 
     }
 
     public Product(String name, String description, String shopName, Long sold, Double price, Double rating,
-                   String category, Long available) {
+                   String category, Long available, String imgURL) {
         this.name = name;
         this.description = description;
         this.shopName = shopName;
@@ -39,6 +39,7 @@ public class Product {
         this.category = category;
         this.rating = rating;
         this.available = available;
+        this.imgURL = imgURL;
     }
 
     public String getCategory() {
@@ -107,7 +108,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "id" + id + ","
+        return "Product{" + "id=" + id + ","
                 + "name=" + name + ","
                 + "category=" + category + ","
                 + "description=" + description + ","
@@ -115,6 +116,7 @@ public class Product {
                 + "sold=" + sold + ","
                 + "price=" + price + ","
                 + "rating=" + rating + ","
-                + "available=" + available + "}";
+                + "available=" + available + ","
+                + "imgURL=" + imgURL + "}";
     }
 }

@@ -15,10 +15,10 @@ public class ProductConfig {
     @Bean
     CommandLineRunner initDatabase(ProductRepository productRepository) {
         return args -> {
-            Product A = new Product("Yamaha Exciter 150","Yamaha Town","Ngon",
-                    14500L,4.9,2340.0,"Motorbike",1239L);
-            Product B = new Product("Yamaha Exciter 155 VVA","Yamaha Town","Ngon",
-                    14240L,4.9,2320.0,"Motorbike",1223L);
+            Product A = new Product("Yamaha Exciter 150","Ngon","Yamaha Town",
+                    14500L,2340.0,4.9,"Motorbike",1239L, "");
+            Product B = new Product("Yamaha Exciter 155 VVA","Ngon","Yamaha Town",
+                    14240L,2320.0,4.9,"Motorbike",1223L, "");
             logger.info("inserted record: " + productRepository.save(A));
             logger.info("inserted record: " + productRepository.save(B));
         };
