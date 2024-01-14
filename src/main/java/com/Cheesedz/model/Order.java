@@ -7,18 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-@Table(name = "order", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+//@Entity
+//@Table(name = "order", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "timestamp")
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "timestamp")
     private Timestamp timestamp;
-    @Column(name = "typeOfPayment")
+//    @Column(name = "typeOfPayment")
     private String typeOfPayment;
-    @Column(name = "totalPrice")
+//    @Column(name = "totalPrice")
     private Double totalPrice;
-    @Column(name = "status")
+//    @Column(name = "status")
     private String status;
     //@OneToMany(mappedBy = "productID")
     private HashMap<Product, Long> items;
@@ -92,11 +92,11 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order[" + items.toString() + ","
+        return "Order{" + items.toString() + ","
                 + "appliedVouchers=" + appliedVouchers.toString() + ","
                 + "totalPrice=" + totalPrice + ","
                 + "typeOfPayment=" + typeOfPayment + ","
                 + "status=" + status + ","
-                + "timestamp=" + timestamp + "]";
+                + "timestamp=" + timestamp + "}";
     }
 }

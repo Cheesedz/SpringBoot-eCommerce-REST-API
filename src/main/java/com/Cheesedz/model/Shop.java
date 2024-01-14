@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
-@Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "shopName" })})
+//@Entity
+//@Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "shopName" })})
 public class Shop {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String name;
     private String typeOfShop;
     private String typeOfProduct;
@@ -17,7 +17,7 @@ public class Shop {
     private Long following;
     private String joiningDate;
     private Double chatPerformance;
-    @OneToMany(mappedBy = "shopName", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "shopName", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> productList;
     public Shop() {
 
@@ -111,12 +111,13 @@ public class Shop {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        res.append("Shop[name=").append(name).append(",").append("description=").append(description).append(",")
+        res.append("Shop{name=").append(name).append(",").append("description=").append(description).append(",")
                 .append("followers=").append(followers).append(",").append("following=").append(following).append(",")
                 .append("typeOfShop=").append(typeOfShop).append(",").append("typeOfProduct=").append(typeOfProduct)
                 .append(",").append("joiningDate=").append(joiningDate).append(",").append("chatPerformance=")
                 .append(chatPerformance).append("\n");
         productList.forEach(x -> res.append(x.toString()).append("\n"));
+        res.append("}\n");
         return res.toString();
     }
 }

@@ -1,15 +1,17 @@
 package com.Cheesedz;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class Main {
+public class eCommerceAPIApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(eCommerceAPIApplication.class, args);
     }
 
     @GetMapping
@@ -17,11 +19,8 @@ public class Main {
         return "index";
     }
 
-    record Client(
-            Long id,
-            String address,
-            String name,
-            String email,
-            String dob
-    ) {}
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 }

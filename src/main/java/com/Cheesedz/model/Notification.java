@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "notification", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+//@Entity
+//@Table(name = "notification", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Notification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "title")
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "title")
     private String title;
-    @Column(name = "detailContent")
+//    @Column(name = "detailContent")
     private String detailContent;
-    @Column(name = "timestamp")
+//    @Column(name = "timestamp")
     private Timestamp timestamp;
     public Notification() {
 
@@ -27,8 +27,8 @@ public class Notification {
 
     @Override
     public String toString() {
-        return "Notification[tile=" + title + ","
+        return "Notification{tile=" + title + ","
                 + "detailContent=" + detailContent + ","
-                + "timestamp=" + timestamp + "]";
+                + "timestamp=" + timestamp + "}";
     }
 }

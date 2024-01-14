@@ -8,28 +8,29 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "productName")
+    private Long id;
     private String name;
-    @OneToOne
-    @JoinColumn(name = "categoryName")
-    private Category category;
-    @Column(name = "description")
+//    @OneToOne
+//    @JoinColumn(name = "categoryName")
+    private String category;
+    //@Column(name = "description")
     private String description;
-    @Column(name = "shopName")
+    //@Column(name = "shopName")
     private String shopName;
-    @Column(name = "sold")
+    //@Column(name = "sold")
     private Long sold;
-    @Column(name = "price")
+    //@Column(name = "price")
     private Double price;
-    @Column(name = "rating")
+    //@Column(name = "rating")
     private Double rating;
-    @Column(name = "available")
+    //@Column(name = "available")
     private Long available;
     public Product() {
 
     }
 
     public Product(String name, String description, String shopName, Long sold, Double price, Double rating,
-                   Category category, Long available) {
+                   String category, Long available) {
         this.name = name;
         this.description = description;
         this.shopName = shopName;
@@ -40,11 +41,11 @@ public class Product {
         this.available = available;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -106,13 +107,14 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product[name=" + name + ","
+        return "Product{" + "id" + id + ","
+                + "name=" + name + ","
                 + "category=" + category + ","
                 + "description=" + description + ","
                 + "shopName=" + shopName + ","
                 + "sold=" + sold + ","
                 + "price=" + price + ","
                 + "rating=" + rating + ","
-                + "available=" + available + "]";
+                + "available=" + available + "}";
     }
 }
