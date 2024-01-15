@@ -19,8 +19,8 @@ public class ProductConfig {
                     14500L,2340.0,4.9,"Motorbike",1239L, "");
             Product B = new Product("Yamaha Exciter 155 VVA","Ngon","Yamaha Town",
                     14240L,2320.0,4.9,"Motorbike",1223L, "");
-            logger.info("inserted record: " + productRepository.save(A));
-            logger.info("inserted record: " + productRepository.save(B));
+//            logger.info("inserted record: " + productRepository.save(A));
+//            logger.info("inserted record: " + productRepository.save(B));
         };
     }
 }
