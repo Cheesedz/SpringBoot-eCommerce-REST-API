@@ -2,48 +2,83 @@ package com.Cheesedz.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-//@Entity
-//@Table(name = "order", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+@Entity
+@Table(name = "orders", uniqueConstraints = { @UniqueConstraint(columnNames = { "orderId" })})
 public class Order {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "timestamp")
-    private Timestamp timestamp;
+    @Id
+    @SequenceGenerator(
+            name = "order_seq",
+            sequenceName = "order_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "order_seq"
+    )
+    private Long orderID;
 //    @Column(name = "typeOfPayment")
+    private Long userID;
     private String typeOfPayment;
 //    @Column(name = "totalPrice")
-    private Double totalPrice;
 //    @Column(name = "status")
     private String status;
     //@OneToMany(mappedBy = "productID")
-    private HashMap<Product, Long> items;
-    private List<Voucher> appliedVouchers;
+    private String orderDate;
+    private String expectedShippedDate;
+    private Long voucherID;
 
     public Order() {
 
     }
 
-    public Order(Timestamp timestamp, String typeOfPayment, Double totalPrice, HashMap<Product, Long> items,
-                 String status, List<Voucher> appliedVouchers) {
-        this.timestamp = timestamp;
+    public Order(Long userID, String typeOfPayment, String status, String orderDate, String expectedShippedDate,
+                 Long voucherID) {
+        this.userID = userID;
         this.typeOfPayment = typeOfPayment;
-        this.totalPrice = totalPrice;
         this.status = status;
-        this.items = items;
-        this.appliedVouchers = appliedVouchers;
+        this.orderDate = orderDate;
+        this.expectedShippedDate = expectedShippedDate;
+        this.voucherID = voucherID;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Long getVoucherID() {
+        return voucherID;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setVoucherID(Long voucherID) {
+        this.voucherID = voucherID;
+    }
+
+    public Long getOrderNumber() {
+        return orderID;
+    }
+
+    public void setOrderNumber(Long orderNumber) {
+        this.orderID = orderNumber;
+    }
+
+    public Long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getExpectedShippedDate() {
+        return expectedShippedDate;
+    }
+
+    public void setExpectedShippedDate(String expectedShippedDate) {
+        this.expectedShippedDate = expectedShippedDate;
     }
 
     public String getTypeOfPayment() {
@@ -54,14 +89,6 @@ public class Order {
         this.typeOfPayment = typeOfPayment;
     }
 
-    public Double getTotalPrice() {
-        double sum = 0;
-        for (Map.Entry<Product, Long> entry : items.entrySet()) {
-            sum = sum + entry.getKey().getPrice() * entry.getValue();
-        }
-        return sum;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -70,33 +97,13 @@ public class Order {
         this.status = status;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public HashMap<Product, Long> getItems() {
-        return items;
-    }
-
-    public void setItems(HashMap<Product, Long> items) {
-        this.items = items;
-    }
-
-    public List<Voucher> getAppliedVouchers() {
-        return appliedVouchers;
-    }
-
-    public void setAppliedVouchers(List<Voucher> appliedVouchers) {
-        this.appliedVouchers = appliedVouchers;
-    }
-
     @Override
     public String toString() {
-        return "Order{" + items.toString() + ","
-                + "appliedVouchers=" + appliedVouchers.toString() + ","
-                + "totalPrice=" + totalPrice + ","
+        return "Order{userID=" + userID + ","
                 + "typeOfPayment=" + typeOfPayment + ","
+                + "orderDate=" + orderDate + ","
+                + "expectedShipDate=" + expectedShippedDate + ","
                 + "status=" + status + ","
-                + "timestamp=" + timestamp + "}";
+                + "voucherID=" + voucherID + "}";
     }
 }

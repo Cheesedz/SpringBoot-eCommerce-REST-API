@@ -6,8 +6,17 @@ import jakarta.persistence.*;
 @Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "product_seq",
+            sequenceName = "product_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "product_seq"
+    )
     private Long id;
+    private Long orderID;
     private String name;
 //    @OneToOne
 //    @JoinColumn(name = "categoryName")
@@ -29,9 +38,10 @@ public class Product {
 
     }
 
-    public Product(String name, String description, String shopName, Long sold, Double price, Double rating,
+    public Product(String name, Long orderID, String description, String shopName, Long sold, Double price, Double rating,
                    String category, Long available, String imgURL) {
         this.name = name;
+        this.orderID = orderID;
         this.description = description;
         this.shopName = shopName;
         this.sold = sold;
@@ -40,6 +50,14 @@ public class Product {
         this.rating = rating;
         this.available = available;
         this.imgURL = imgURL;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCategory() {
@@ -114,10 +132,19 @@ public class Product {
         this.imgURL = imgURL;
     }
 
+    public Long getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(Long orderID) {
+        this.orderID = orderID;
+    }
+
     @Override
     public String toString() {
         return "Product{" + "id=" + id + ","
                 + "name=" + name + ","
+                + "orderID=" + orderID + ","
                 + "category=" + category + ","
                 + "description=" + description + ","
                 + "shopName=" + shopName + ","
