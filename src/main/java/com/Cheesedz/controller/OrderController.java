@@ -1,11 +1,8 @@
 package com.Cheesedz.controller;
 
 import com.Cheesedz.model.Order;
-import com.Cheesedz.model.Product;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.OrderService;
-import com.Cheesedz.service.ProductService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +15,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @GetMapping("")
-    public List<Order> getAllOrders() {
+    public ResponseEntity<ResponseObject> getAllOrders() {
         return orderService.getAllOrders();
     }
 

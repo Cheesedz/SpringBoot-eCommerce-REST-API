@@ -9,49 +9,49 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-//@Entity
-//@Data
-//@NoArgsConstructor
-//@Table(name = "user",  uniqueConstraints = { @UniqueConstraint(columnNames = { "id"/*, "username"*/ })})
+@Entity
+@NoArgsConstructor
+@Table(name = "user",  uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class User {
-//    private static final long serialVersionUID = 1L;
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @SequenceGenerator(
+            name = "user_seq",
+            sequenceName = "user_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_seq"
+    )
     private Long id;
 
-    //@Column(name = "username")
     private String username;
 
-    //@Column(name = "name")
     private String name;
 
-    //@Column(name = "email")
     private String email;
 
-    //@Column(name = "phone")
     private String phone;
 
-    //@Column(name = "gender")
     private String gender;
 
-    //@Column(name = "dob")
     private String dob;
 
-    //@Column(name = "cart")
-    private Cart cart;
-
-//    @JsonIgnore
-//    @OneToMany(targetEntity= Voucher.class, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Voucher> voucherList;
-
-    public User(String username, String name, String email, String phone, String gender, String dob, Cart cart) {
+    public User(String username, String name, String email, String phone, String gender, String dob) {
         this.username = username;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.gender = gender;
         this.dob = dob;
-        this.cart = cart;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -102,34 +102,14 @@ public class User {
         this.dob = dob;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public List<Voucher> getVoucherList() {
-        return this.voucherList == null ? null : new ArrayList<>(this.voucherList);
-    }
-
-    public void setVoucherList(List<Voucher> voucherList) {
-        if (voucherList == null) {
-            this.voucherList = null;
-        } else {
-            this.voucherList = Collections.unmodifiableList(voucherList);
-        }
-    }
-
     @Override
     public String toString() {
-        return "User{username=" + username + ","
+        return "User{id=" + id + ","
+                + "username=" + username + ","
                 + "name=" + name + ","
                 + "email=" + email + ","
                 + "phone=" + phone + ","
                 + "gender=" + gender + ","
-                + "cart=" + cart + ","
                 + "dob=" + dob + "}";
     }
 }

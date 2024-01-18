@@ -20,8 +20,15 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public ResponseEntity<ResponseObject> getAllProducts() {
+        List<Product> foundProducts = productRepository.findAll();
+        return foundProducts.size() > 0 ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Get all products successfully", foundProducts)
+                ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("failed", "Cannot find any products", "")
+                );
     }
 
     public ResponseEntity<ResponseObject> findById(Long id) {
@@ -40,7 +47,7 @@ public class ProductService {
         if (foundProducts.size() > 0) {
             logger.info("Failed to insert data: " + newProduct);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    new ResponseObject("Failed", "Product name already existed", "")
+                    new ResponseObject("failed", "Product name already existed", "")
             );
         } else {
             logger.info("Insert data successfully. " + newProduct);

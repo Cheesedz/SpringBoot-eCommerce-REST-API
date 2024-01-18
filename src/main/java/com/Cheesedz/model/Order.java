@@ -1,7 +1,9 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "orders", uniqueConstraints = { @UniqueConstraint(columnNames = { "orderId" })})
 public class Order {
@@ -26,10 +28,6 @@ public class Order {
     private String orderDate;
     private String expectedShippedDate;
     private Long voucherID;
-
-    public Order() {
-
-    }
 
     public Order(Long userID, String typeOfPayment, String status, String orderDate, String expectedShippedDate,
                  Long voucherID) {

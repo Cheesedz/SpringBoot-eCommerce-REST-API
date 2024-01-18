@@ -1,7 +1,9 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Product {
@@ -34,9 +36,6 @@ public class Product {
     //@Column(name = "available")
     private Long available;
     private String imgURL;
-    public Product() {
-
-    }
 
     public Product(String name, Long orderID, String description, String shopName, Long sold, Double price, Double rating,
                    String category, Long available, String imgURL) {
@@ -97,7 +96,7 @@ public class Product {
     }
 
     public void setSold(Long sold) {
-        this.sold = sold;
+        if (sold > 0) this.sold = sold;
     }
 
     public Double getPrice() {
@@ -105,7 +104,7 @@ public class Product {
     }
 
     public void setPrice(Double price) {
-        this.price = price;
+        if (price > 0) this.price = price;
     }
 
     public Double getRating() {

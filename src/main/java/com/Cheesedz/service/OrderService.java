@@ -2,6 +2,7 @@ package com.Cheesedz.service;
 
 import com.Cheesedz.controller.ProductController;
 import com.Cheesedz.model.Order;
+import com.Cheesedz.model.Product;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.OrderRepository;
 import com.Cheesedz.repository.ProductRepository;
@@ -25,8 +26,15 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public ResponseEntity<ResponseObject> getAllOrders() {
+        List<Order> foundOrders = orderRepository.findAll();
+        return foundOrders.size() > 0 ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Get all orders successfully", foundOrders)
+                ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("failed", "Cannot find any orders", "")
+                );
     }
 
     public ResponseEntity<ResponseObject> findById(Long id) {
@@ -43,18 +51,14 @@ public class OrderService {
     public ResponseEntity<ResponseObject> findAllProducts(Long id) {
         List<Object> responses = new ArrayList<>();
         Optional<Order> foundOrder = orderRepository.findById(id);
-        if(foundOrder.isPresent()) {
-            //responses.add(foundOrder);
-            //responses.add(productRepository.findByOrderID(id));
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Query order successfully", productRepository.findByOrderID(id))
-            );
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find order with id = " + id, "")
-            );
-        }
+        return foundOrder.isPresent() ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Query order's products successfully",
+                            productRepository.findByOrderID(id))
+            ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("failed", "Cannot find order with id = " + id, "")
+        );
     }
 
     public ResponseEntity<ResponseObject> insertOrder(Order newOrder) {
@@ -62,7 +66,7 @@ public class OrderService {
         if (!foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newOrder);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    new ResponseObject("Failed", "Order name already existed", "")
+                    new ResponseObject("failed", "Order id already existed", "")
             );
         } else {
             logger.info("Insert data successfully. " + newOrder);
