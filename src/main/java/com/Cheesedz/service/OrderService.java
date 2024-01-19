@@ -1,5 +1,6 @@
 package com.Cheesedz.service;
 
+import com.Cheesedz.controller.OrderController;
 import com.Cheesedz.controller.ProductController;
 import com.Cheesedz.model.Order;
 import com.Cheesedz.model.Product;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @Service
 public class OrderService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     @Autowired
     private OrderRepository orderRepository;
 
@@ -63,7 +64,7 @@ public class OrderService {
 
     public ResponseEntity<ResponseObject> insertOrder(Order newOrder) {
         Optional<Order> foundOrders = orderRepository.findById(newOrder.getOrderNumber());
-        if (!foundOrders.isPresent()) {
+        if (foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newOrder);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
                     new ResponseObject("failed", "Order id already existed", "")

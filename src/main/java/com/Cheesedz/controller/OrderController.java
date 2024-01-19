@@ -5,7 +5,7 @@ import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,19 +29,19 @@ public class OrderController {
     }
 
     @PostMapping("/insert")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResponseObject> insertOrder(@RequestBody Order newProduct) {
         return orderService.insertOrder(newProduct);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order newOrder, @PathVariable(name = "id") Long id) {
         return orderService.updateOrder(newOrder, id);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResponseObject> deleteOrder(@PathVariable(name = "id") Long id) {
         return orderService.deleteOrder(id);
     }

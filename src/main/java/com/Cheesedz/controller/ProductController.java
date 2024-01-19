@@ -5,7 +5,7 @@ import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,19 +24,19 @@ public class ProductController {
     }
 
     @PostMapping("/insert")
-    @PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
+    //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertProduct(@RequestBody Product newProduct) {
         return productService.insertProduct(newProduct);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
+    //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product newProduct, @PathVariable(name = "id") Long id) {
         return productService.updateProduct(newProduct, id);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
+    //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> deleteProduct(@PathVariable(name = "id") Long id) {
         return productService.deleteProduct(id);
     }

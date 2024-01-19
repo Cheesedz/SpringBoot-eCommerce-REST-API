@@ -1,7 +1,7 @@
 package com.Cheesedz.service;
 
 import com.Cheesedz.controller.ProductController;
-import com.Cheesedz.model.Order;
+import com.Cheesedz.controller.UserController;
 import com.Cheesedz.model.User;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.OrderRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private OrderRepository orderRepository;
 
