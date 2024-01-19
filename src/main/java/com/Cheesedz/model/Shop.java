@@ -1,14 +1,23 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-//@Entity
-//@Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id", "shopName" })})
+@Entity
+@NoArgsConstructor
+@Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Shop {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @SequenceGenerator(
+            name = "shop_seq",
+            sequenceName = "shop_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "shop_seq"
+    )
+    private Long shopID;
     private String name;
     private String typeOfShop;
     private String typeOfProduct;
@@ -17,14 +26,9 @@ public class Shop {
     private Long following;
     private String joiningDate;
     private Double chatPerformance;
-//    @OneToMany(mappedBy = "shopName", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> productList;
-    public Shop() {
-
-    }
 
     public Shop(String name, String typeOfShop, String typeOfProduct, String description, Long followers,
-                Long following, String joiningDate, Double chatPerformance, List<Product> productList) {
+                Long following, String joiningDate, Double chatPerformance) {
         this.name = name;
         this.typeOfShop = typeOfShop;
         this.typeOfProduct = typeOfProduct;
@@ -33,7 +37,14 @@ public class Shop {
         this.following = following;
         this.joiningDate = joiningDate;
         this.chatPerformance = chatPerformance;
-        this.productList = productList;
+    }
+
+    public Long getShopID() {
+        return shopID;
+    }
+
+    public void setShopID(Long shopID) {
+        this.shopID = shopID;
     }
 
     public String getTypeOfShop() {
@@ -100,14 +111,6 @@ public class Shop {
         this.chatPerformance = chatPerformance;
     }
 
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
-
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
@@ -115,9 +118,7 @@ public class Shop {
                 .append("followers=").append(followers).append(",").append("following=").append(following).append(",")
                 .append("typeOfShop=").append(typeOfShop).append(",").append("typeOfProduct=").append(typeOfProduct)
                 .append(",").append("joiningDate=").append(joiningDate).append(",").append("chatPerformance=")
-                .append(chatPerformance).append("\n");
-        productList.forEach(x -> res.append(x.toString()).append("\n"));
-        res.append("}\n");
+                .append(chatPerformance).append("}\n");
         return res.toString();
     }
 }
