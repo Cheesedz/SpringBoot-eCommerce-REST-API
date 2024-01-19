@@ -5,6 +5,7 @@ import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,27 +19,30 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject> getOrder(@PathVariable(name = "id") Long id) {
         return orderService.findById(id);
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<ResponseObject> findAllProducts(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject> getAllProducts(@PathVariable(name = "id") Long id) {
         return orderService.findAllProducts(id);
     }
 
     @PostMapping("/insert")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResponseObject> insertOrder(@RequestBody Order newProduct) {
         return orderService.insertOrder(newProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order newOrder, @PathVariable Long id) {
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order newOrder, @PathVariable(name = "id") Long id) {
         return orderService.updateOrder(newOrder, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable Long id) {
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable(name = "id") Long id) {
         return orderService.deleteOrder(id);
     }
 }

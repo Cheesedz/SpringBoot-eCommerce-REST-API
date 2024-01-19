@@ -5,9 +5,8 @@ import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/users")
@@ -20,27 +19,31 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject> getUser(@PathVariable(name = "id") Long id) {
         return userService.findById(id);
     }
 
     @GetMapping("/{id}/orders")
-    public ResponseEntity<ResponseObject> findAllOrders(@PathVariable Long id) {
+    @PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> findAlOrders(@PathVariable(name = "id") Long id) {
         return userService.findAllOrders(id);
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<ResponseObject> insertOrder(@RequestBody User newUser) {
+    @PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> insertUser(@RequestBody User newUser) {
         return userService.insertUser(newUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateOrder(@RequestBody User newUser, @PathVariable Long id) {
+    @PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> updateUser(@RequestBody User newUser, @PathVariable(name = "id") Long id) {
         return userService.updateUser(newUser, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable Long id) {
+    @PreAuthorize("hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> deleteUser(@PathVariable(name = "id") Long id) {
         return userService.deleteUser(id);
     }
 }

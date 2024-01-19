@@ -1,19 +1,17 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
-//@Entity
-//@Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+@Entity
+@NoArgsConstructor
+@Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Category {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "categoryName")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-//    @Column(name = "thumbnailPath")
     private String thumbnailPath;
-    public Category() {
-
-    }
 
     public Category(String name, String description, String thumbnailPath) {
         this.name = name;
