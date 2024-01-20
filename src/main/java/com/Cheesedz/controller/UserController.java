@@ -29,6 +29,12 @@ public class UserController {
         return userService.findAllOrders(id);
     }
 
+    @GetMapping("/{id}/vouchers")
+    //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> findAlVouchers(@PathVariable(name = "id") Long id) {
+        return userService.findAllOrders(id);
+    }
+
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertUser(@RequestBody User newUser) {

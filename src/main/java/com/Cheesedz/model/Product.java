@@ -19,6 +19,7 @@ public class Product {
     )
     private Long id;
     private Long orderID;
+    private Long cartItemID;
     private Long shopID;
     private String name;
 //    @OneToOne
@@ -38,8 +39,8 @@ public class Product {
     private Long available;
     private String imgURL;
 
-    public Product(String name, Long orderID, Long shopID, String description, String shopName, Long sold, Double price, Double rating,
-                   String category, Long available, String imgURL) {
+    public Product(String name, Long orderID, Long shopID, String description, String shopName, Long sold, Double price,
+                   Double rating, String category, Long available, String imgURL) {
         this.name = name;
         this.orderID = orderID;
         this.shopID = shopID;

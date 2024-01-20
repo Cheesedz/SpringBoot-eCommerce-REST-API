@@ -1,53 +1,69 @@
 package com.Cheesedz.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
-//@Data
-//@NoArgsConstructor
-//@Table(name = "cartItems",uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
+@Entity
+@NoArgsConstructor
+@Table(name = "cartItems",uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class CartItems {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @SequenceGenerator(
+            name = "cartItems_seq",
+            sequenceName = "cartItems_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "cartItems_seq"
+    )
     private Long id;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_id")
-    private Product product;
-
-//    @Column(name = "type")
-    private String type;
-
-//    @Column(name = "totalPrice")
-    private Double totalPrice;
-
-//    @Column(name = "quantity")
+    private Long cartID;
+    private Long productID;
     private Long quantity;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-    public CartItems(Product product, String type, Double totalPrice, Long quantity) {
-        this.product = product;
-        this.type = type;
-        this.totalPrice = product.getPrice() * quantity;
+    public CartItems(Long cartID, Long productID, Long quantity) {
+        this.cartID = cartID;
+        this.productID = productID;
         this.quantity = quantity;
     }
 
-    @JsonIgnore
-    public Cart getCart() {
-        return cart;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCartID() {
+        return cartID;
+    }
+
+    public void setCartID(Long cartID) {
+        this.cartID = cartID;
+    }
+
+    public Long getProductID() {
+        return productID;
+    }
+
+    public void setProductID(Long productID) {
+        this.productID = productID;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     @Override
     public String toString() {
-        return "SelectedProduct{" + product.toString() + ","
-                + "type=" + type + ","
-                + "totalPrice=" + quantity * product.getPrice() + ","
+        return "CartItem{cartID=" + cartID + ","
+                + "productID=" + productID + ","
                 + "quantity=" + quantity + "}";
     }
 }

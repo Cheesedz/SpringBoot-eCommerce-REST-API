@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/vouchers")
+@RequestMapping(path = "api/v1/user/{userId}/vouchers")
 public class VoucherController {
     @Autowired
     private VoucherService voucherService;
@@ -21,25 +21,29 @@ public class VoucherController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getShop(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> getShop(@PathVariable(name = "userId") Long userId,
+                                                  @PathVariable(name = "id") Long id) {
         return voucherService.findById(id);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertShop(@RequestBody Voucher newVoucher) {
+    public ResponseEntity<ResponseObject> insertShop(@PathVariable(name = "userId") Long userId,
+                                                     @RequestBody Voucher newVoucher) {
         return voucherService.insertVoucher(newVoucher);
     }
 
     @PutMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> updateShop(@RequestBody Voucher newVoucher, @PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> updateShop(@RequestBody Voucher newVoucher,
+                                     @PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return voucherService.updateVoucher(newVoucher, id);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> deleteShop(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> deleteShop(@PathVariable(name = "userId") Long userId,
+                                                     @PathVariable(name = "id") Long id) {
         return voucherService.deleteVoucher(id);
     }
 }

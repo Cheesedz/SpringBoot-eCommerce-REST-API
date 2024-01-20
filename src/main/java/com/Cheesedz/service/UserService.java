@@ -1,11 +1,12 @@
 package com.Cheesedz.service;
 
-import com.Cheesedz.controller.ProductController;
 import com.Cheesedz.controller.UserController;
 import com.Cheesedz.model.User;
 import com.Cheesedz.payload.ResponseObject;
+import com.Cheesedz.repository.NotificationRepository;
 import com.Cheesedz.repository.OrderRepository;
 import com.Cheesedz.repository.UserRepository;
+import com.Cheesedz.repository.VoucherRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +22,10 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private OrderRepository orderRepository;
-
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -49,12 +52,35 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseObject> findAllOrders(Long id) {
-        List<Object> responses = new ArrayList<>();
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Query user's orders successfully",
                                 orderRepository.findByUserID(id))
+                ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                );
+    }
+
+    public ResponseEntity<ResponseObject> findAllVouchers(Long id) {
+        Optional<User> foundUser = userRepository.findById(id);
+        return foundUser.isPresent() ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Query user's vouchers successfully",
+                                voucherRepository.findByUserID(id))
+                ):
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                );
+    }
+
+    public ResponseEntity<ResponseObject> findAllNotifications(Long id) {
+        Optional<User> foundUser = userRepository.findById(id);
+        return foundUser.isPresent() ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Query user's notifications successfully",
+                                notificationRepository.findByUserID(id))
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         new ResponseObject("failed", "Cannot find user with id = " + id, "")

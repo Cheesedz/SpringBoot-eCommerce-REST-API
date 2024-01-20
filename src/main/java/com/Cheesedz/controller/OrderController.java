@@ -9,40 +9,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/orders")
+@RequestMapping(path = "api/v1/user/{userId}/orders")
 public class OrderController {
     @Autowired
     private OrderService orderService;
     @GetMapping("")
-    public ResponseEntity<ResponseObject> getAllOrders() {
+    public ResponseEntity<ResponseObject> getAllOrders(@PathVariable(name = "userId") Long userId) {
         return orderService.getAllOrders();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getOrder(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> getOrder(@PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return orderService.findById(id);
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<ResponseObject> getAllProducts(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> getAllProducts(@PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return orderService.findAllProducts(id);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ResponseObject> insertOrder(@RequestBody Order newProduct) {
+    public ResponseEntity<ResponseObject> insertOrder(@RequestBody Order newProduct, @PathVariable(name = "userId") Long userId) {
         return orderService.insertOrder(newProduct);
     }
 
     @PutMapping("/{id}")
     //@PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order newOrder, @PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order newOrder,
+                                                      @PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return orderService.updateOrder(newOrder, id);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return orderService.deleteOrder(id);
     }
 }
