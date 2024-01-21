@@ -82,7 +82,7 @@ public class CartService {
         );
     }
 
-    public ResponseEntity<ResponseObject> insertCart(Cart newCart) {
+    public ResponseEntity<ResponseObject> insertCart(Cart newCart, Long userID) {
         Optional<Cart> foundOrders = cartRepository.findById(newCart.getId());
         if (foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newCart);
@@ -91,6 +91,7 @@ public class CartService {
             );
         } else {
             logger.info("Insert data successfully. " + newCart);
+            newCart.setUserID(userID);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Insert cart successfully", cartRepository.save(newCart))
             );

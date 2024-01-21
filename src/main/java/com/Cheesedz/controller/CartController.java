@@ -40,7 +40,7 @@ public class CartController {
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertCart(@RequestBody Cart newCart,
                                                      @PathVariable(name = "userId") Long userId) {
-        return cartService.insertCart(newCart);
+        return cartService.insertCart(newCart, userId);
     }
 
     @PutMapping("/id")

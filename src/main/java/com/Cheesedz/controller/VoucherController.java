@@ -16,33 +16,33 @@ public class VoucherController {
     @Autowired
     private VoucherService voucherService;
     @GetMapping("")
-    public ResponseEntity<ResponseObject> getAllVouchers() {
-        return voucherService.getAllVouchers();
+    public ResponseEntity<ResponseObject> getAllVouchers(@PathVariable(name = "userId") Long userId) {
+        return voucherService.getAllVouchers(userId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getShop(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<ResponseObject> getVoucher(@PathVariable(name = "userId") Long userId,
                                                   @PathVariable(name = "id") Long id) {
-        return voucherService.findById(id);
+        return voucherService.getVoucher(id, userId);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertShop(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<ResponseObject> insertVoucher(@PathVariable(name = "userId") Long userId,
                                                      @RequestBody Voucher newVoucher) {
-        return voucherService.insertVoucher(newVoucher);
+        return voucherService.insertVoucher(newVoucher, userId);
     }
 
     @PutMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> updateShop(@RequestBody Voucher newVoucher,
+    public ResponseEntity<ResponseObject> updateVoucher(@RequestBody Voucher newVoucher,
                                      @PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
         return voucherService.updateVoucher(newVoucher, id);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> deleteShop(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<ResponseObject> deleteVoucher(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "id") Long id) {
         return voucherService.deleteVoucher(id);
     }

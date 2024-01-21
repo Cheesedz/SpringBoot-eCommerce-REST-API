@@ -1,6 +1,8 @@
 package com.Cheesedz.config;
 
+import com.Cheesedz.model.Shop;
 import com.Cheesedz.repository.OrderRepository;
+import com.Cheesedz.repository.ShopRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -12,14 +14,11 @@ public class DBConfig {
     private static final Logger logger = LoggerFactory.getLogger(DBConfig.class);
 
     @Bean
-    CommandLineRunner initDatabase(OrderRepository orderRepository) {
+    CommandLineRunner initDatabase(ShopRepository shopRepository) {
         return args -> {
-//            Order A = new Order(1L,"Cash","Shipped",
-//                    "2024-01-10","2024-01-19",1239L);
-//            Order B = new Order(1L,"Cash","Shipped",
-//                    "2024-01-18","2024-01-19",1219L);
-//            logger.info("inserted record: " + orderRepository.save(A));
-//            logger.info("inserted record: " + orderRepository.save(B));
+            Shop A = new Shop("ABC", "Mall", "Clothes", "Clothes shop No1 HN", 10100L, 24L, "2020-10-23", 4.6);
+            logger.info("inserted record: " + shopRepository.save(A));
+            //logger.info("inserted record: " + orderRepository.save(B));
         };
     }
 }

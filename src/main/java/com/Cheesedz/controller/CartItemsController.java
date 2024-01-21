@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/user/{userId}/cart/cartItems")
+@RequestMapping(path = "api/v1/user/{userId}/cartItems")
 public class CartItemsController {
     @Autowired
     private CartItemsService cartItemsService;
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<ResponseObject> getItems(@PathVariable(name = "userId") Long userId) {
         return cartItemsService.getAllItems();
     }

@@ -1,12 +1,9 @@
 package com.Cheesedz.service;
 
-import com.Cheesedz.controller.ProductController;
 import com.Cheesedz.controller.VoucherController;
-import com.Cheesedz.model.Order;
 import com.Cheesedz.model.Voucher;
 import com.Cheesedz.payload.ResponseObject;
-import com.Cheesedz.repository.OrderRepository;
-import com.Cheesedz.repository.ProductRepository;
+import com.Cheesedz.repository.UserRepository;
 import com.Cheesedz.repository.VoucherRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,29 +21,29 @@ public class VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
 
-    public ResponseEntity<ResponseObject> getAllVouchers() {
-        List<Voucher> foundVouchers = voucherRepository.findAll();
+    public ResponseEntity<ResponseObject> getAllVouchers(Long userID) {
+        List<Voucher> foundVouchers = voucherRepository.findByUserID(userID);
         return foundVouchers.size() > 0 ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Get all vouchers successfully", foundVouchers)
+                        new ResponseObject("ok", "Get all user's vouchers successfully", foundVouchers)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         new ResponseObject("failed", "Cannot find any vouchers", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> findById(Long id) {
-        Optional<Voucher> foundVouchers = voucherRepository.findById(id);
-        return foundVouchers.isPresent() ?
-                ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query voucher successfully", foundVouchers)
-                ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find voucher with id = " + id, "")
-                );
+    public ResponseEntity<ResponseObject> getVoucher(Long id, Long userID) {
+        Voucher voucher = voucherRepository.findById(id).get();
+        return voucher.getUserID() == userID ?
+            ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Query voucher successfully", voucher)
+            ):
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "Voucher with id = " + id + " doesn't belong to this user", "")
+            );
     }
 
-    public ResponseEntity<ResponseObject> insertVoucher(Voucher newVoucher) {
+    public ResponseEntity<ResponseObject> insertVoucher(Voucher newVoucher, Long userId) {
         Optional<Voucher> foundVouchers = voucherRepository.findById(newVoucher.getId());
         if (foundVouchers.isPresent()) {
             logger.info("Failed to insert data: " + newVoucher);
@@ -56,6 +52,7 @@ public class VoucherService {
             );
 
         } else {
+            newVoucher.setUserID(userId);
             logger.info("Insert data successfully. " + newVoucher);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Insert voucher successfully", voucherRepository.save(newVoucher))
