@@ -52,7 +52,6 @@ public class ShopService {
     }
 
     public ResponseEntity<ResponseObject> findAllProducts(Long id) {
-        List<Object> responses = new ArrayList<>();
         Optional<Shop> foundOrder = shopRepository.findById(id);
         return foundOrder.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
@@ -64,7 +63,7 @@ public class ShopService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> insertShop(Shop newShop) {
+    public ResponseEntity<ResponseObject> addShop(Shop newShop) {
         Optional<Shop> foundShops = shopRepository.findById(newShop.getShopID());
         if (!foundShops.isPresent()) {
             logger.info("Failed to insert data: " + newShop);

@@ -15,32 +15,32 @@ public class CartController {
     private CartService cartService;
     @GetMapping("")
     public ResponseEntity<ResponseObject> getCart(@PathVariable(name = "userId") Long userId) {
-        return cartService.getCart();
+        return cartService.getCart(userId);
     }
 
     @GetMapping("/id")
     public ResponseEntity<ResponseObject> getCartByID(@PathVariable(name = "userId") Long userId,
                                                       @PathVariable(name = "id") Long id) {
-        return cartService.findById(id);
+        return cartService.findById(id, userId);
     }
 
     @GetMapping("/cartItems")
     public ResponseEntity<ResponseObject> getAllItems(@PathVariable(name = "userId") Long userId,
                                                       @PathVariable(name = "id") Long id) {
-        return cartService.findAllCartItems(id);
+        return cartService.getAllCartItems(id, userId);
     }
 
     @GetMapping("/price")
     public ResponseEntity<ResponseObject> getTotalPrice(@PathVariable(name = "userId") Long userId,
                                                         @PathVariable(name = "id") Long id) {
-        return cartService.getTotalPrice(id);
+        return cartService.getTotalPrice(id, userId);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertCart(@RequestBody Cart newCart,
+    public ResponseEntity<ResponseObject> addCart(@RequestBody Cart newCart,
                                                      @PathVariable(name = "userId") Long userId) {
-        return cartService.insertCart(newCart, userId);
+        return cartService.addCart(newCart, userId);
     }
 
     @PutMapping("/id")
@@ -48,13 +48,13 @@ public class CartController {
     public ResponseEntity<ResponseObject> updateCart(@RequestBody Cart newCart,
                                                      @PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "id") Long id) {
-        return cartService.updateCart(newCart, id);
+        return cartService.updateCart(newCart, id, userId);
     }
 
     @DeleteMapping("/id")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> deleteCart(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "id") Long id) {
-        return cartService.deleteCart(id);
+        return cartService.deleteCart(id, userId);
     }
 }

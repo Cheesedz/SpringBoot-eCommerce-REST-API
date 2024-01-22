@@ -1,9 +1,11 @@
 package com.Cheesedz.service;
 
 import com.Cheesedz.controller.CartItemsController;
+import com.Cheesedz.model.Cart;
 import com.Cheesedz.model.CartItems;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.CartItemsRepository;
+import com.Cheesedz.repository.CartRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,45 +21,38 @@ public class CartItemsService {
     private static final Logger logger = LoggerFactory.getLogger(CartItemsController.class);
     @Autowired
     private CartItemsRepository cartItemsRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
-    public ResponseEntity<ResponseObject> getAllItems() {
-        List<CartItems> foundItems = cartItemsRepository.findAll();
-        return foundItems.size() > 0 ?
+    public ResponseEntity<ResponseObject> getCartItem(Long id, Long userID) {
+        CartItems foundItem = cartItemsRepository.findById(id).get();
+        Cart foundCart = (Cart) cartRepository.findByUserID(userID);
+        return foundCart.getId().equals(foundItem.getCartID()) ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Get all items successfully", foundItems)
+                        new ResponseObject("ok", "Query item successfully", foundItem)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find any items", "")
+                        new ResponseObject("failed", "Cart item doesn't belong to user", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> findById(Long id) {
-        Optional<CartItems> foundProduct = cartItemsRepository.findById(id);
-        return foundProduct.isPresent() ?
-                ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query item successfully", foundProduct)
-                ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find item with id = " + id, "")
-                );
-    }
-
-    public ResponseEntity<ResponseObject> insertItem(CartItems newItem) {
-        List<CartItems> foundItems = cartItemsRepository.findByCartID(newItem.getCartID());
-        if (foundItems.size() > 0) {
+    public ResponseEntity<ResponseObject> addItem(CartItems newItem, Long userID) {
+        CartItems foundItem = cartItemsRepository.findById(newItem.getId()).get();
+        Cart foundCart = (Cart) cartRepository.findByUserID(userID);
+        if (!foundCart.getId().equals(foundItem.getCartID())) {
             logger.info("Failed to insert data: " + newItem);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    new ResponseObject("failed", "Product name already existed", "")
+                    new ResponseObject("failed", "Cannot add item into user's cart", "")
             );
         } else {
             logger.info("Insert data successfully. " + newItem);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Insert item successfully", cartItemsRepository.save(newItem))
+                    new ResponseObject("ok", "Add item successfully", cartItemsRepository.save(newItem))
             );
         }
     }
 
-    public ResponseEntity<ResponseObject> updateItem(CartItems newItem, Long id) {
+    public ResponseEntity<ResponseObject> updateItem(CartItems newItem, Long id, Long userID) {
         CartItems updatedItem = cartItemsRepository.findById(id).map(
                 item -> {
                     item.setCartID(newItem.getCartID());
@@ -72,9 +67,10 @@ public class CartItemsService {
         );
     }
 
-    public ResponseEntity<ResponseObject> deleteItem(Long id) {
-        boolean existed = cartItemsRepository.existsById(id);
-        if (existed) {
+    public ResponseEntity<ResponseObject> deleteItem(Long id, Long userID) {
+        CartItems foundItem = cartItemsRepository.findById(id).get();
+        Cart foundCart = (Cart) cartRepository.findByUserID(userID);
+        if (foundCart.getId().equals(foundItem.getCartID())) {
             logger.info("Delete data successfully");
             cartItemsRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -83,7 +79,7 @@ public class CartItemsService {
         } else {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find item to delete", "")
+                    new ResponseObject("failed", "Cart item doesn't belong to user", "")
             );
         }
     }

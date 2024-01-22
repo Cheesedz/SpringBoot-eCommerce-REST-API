@@ -51,7 +51,7 @@ public class UserService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> findAllOrders(Long id) {
+    public ResponseEntity<ResponseObject> getAllOrders(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
@@ -63,7 +63,7 @@ public class UserService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> findAllVouchers(Long id) {
+    public ResponseEntity<ResponseObject> getAllVouchers(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
@@ -75,7 +75,7 @@ public class UserService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> findAllNotifications(Long id) {
+    public ResponseEntity<ResponseObject> getAllNotifications(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
@@ -87,7 +87,7 @@ public class UserService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> insertUser(User newUser) {
+    public ResponseEntity<ResponseObject> addUser(User newUser) {
         List<User> foundUsers = userRepository.findByUsername(newUser.getUsername());
         if (foundUsers.size() > 0) {
             logger.info("Failed to insert data: " + newUser);

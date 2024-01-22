@@ -44,7 +44,7 @@ public class VoucherService {
             );
     }
 
-    public ResponseEntity<ResponseObject> insertVoucher(Voucher newVoucher, Long userId) {
+    public ResponseEntity<ResponseObject> addVoucher(Voucher newVoucher, Long userId) {
         Optional<Voucher> foundVouchers = voucherRepository.findById(newVoucher.getId());
         if (foundVouchers.isPresent()) {
             logger.info("Failed to insert data: " + newVoucher);

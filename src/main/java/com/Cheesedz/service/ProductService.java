@@ -85,15 +85,15 @@ public class ProductService {
     }
 
     public ResponseEntity<ResponseObject> deleteProduct(Long id, Long shopID) {
-        Product foundProduct = productRepository.findById(id).get();
-        if (foundProduct == null) {
+        Optional<Product> foundProduct = productRepository.findById(id);
+        if (!foundProduct.isPresent()) {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find voucher to delete", "")
+                    new ResponseObject("failed", "Cannot find product to delete", "")
             );
         }
         else {
-            if (foundProduct.getShopID().equals(shopID)) {
+            if (foundProduct.get().getShopID().equals(shopID)) {
                 logger.info("Delete data successfully");
                 productRepository.deleteById(id);
                 return ResponseEntity.status(HttpStatus.OK).body(

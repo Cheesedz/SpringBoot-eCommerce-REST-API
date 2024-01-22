@@ -31,7 +31,7 @@ public class OrderController {
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResponseObject> insertOrder(@RequestBody Order newProduct, @PathVariable(name = "userId") Long userId) {
-        return orderService.insertOrder(newProduct, userId);
+        return orderService.addOrder(newProduct, userId);
     }
 
     @PutMapping("/{id}")

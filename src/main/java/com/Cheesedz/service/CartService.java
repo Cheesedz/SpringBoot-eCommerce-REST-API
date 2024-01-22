@@ -3,6 +3,7 @@ package com.Cheesedz.service;
 import com.Cheesedz.controller.CartController;
 import com.Cheesedz.model.Cart;
 import com.Cheesedz.model.CartItems;
+import com.Cheesedz.model.Order;
 import com.Cheesedz.model.Product;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.CartItemsRepository;
@@ -30,46 +31,44 @@ public class CartService {
     @Autowired
     private CartItemsRepository cartItemsRepository;
 
-    public ResponseEntity<ResponseObject> getCart() {
-        List<Cart> foundOrders = cartRepository.findAll();
-        return foundOrders.size() > 0 ?
+    public ResponseEntity<ResponseObject> getCart(Long userID) {
+        List<Cart> foundCart = cartRepository.findByUserID(userID);
+        return foundCart.size() > 0 ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Get user's cart successfully", foundOrders)
+                        new ResponseObject("ok", "Get user's cart successfully", foundCart)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                         new ResponseObject("failed", "Cannot find any cart", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> findById(Long id) {
-        Optional<Cart> foundOrders = cartRepository.findById(id);
-        return foundOrders.isPresent() ?
+    public ResponseEntity<ResponseObject> findById(Long id, Long userID) {
+        Cart foundCart = cartRepository.findById(id).get();
+        return foundCart.getUserID().equals(userID) ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query cart successfully", foundOrders)
+                        new ResponseObject("ok", "Query cart successfully", foundCart)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find cart with id = " + id, "")
+                        new ResponseObject("failed", "Cart doesn't belong to user ", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> findAllCartItems(Long id) {
-        Optional<Cart> foundOrder = cartRepository.findById(id);
-        return foundOrder.isPresent() ?
+    public ResponseEntity<ResponseObject> getAllCartItems(Long id, Long userID) {
+        Cart cart = cartRepository.findById(id).get();
+        return cart.getUserID().equals(userID) ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query cart's items successfully",
-                                cartItemsRepository.findByCartID(id))
+                        new ResponseObject("ok", "Get cart's items successfully", cartItemsRepository.findByCartID(id))
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find cart with id = " + id, "")
+                        new ResponseObject("failed", "Cart doesn't belong to user", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> getTotalPrice(Long id) {
-        Optional<Cart> foundOrder = cartRepository.findById(id);
+    public ResponseEntity<ResponseObject> getTotalPrice(Long id, Long userID) {
+        Cart foundCart = cartRepository.findById(id).get();
         AtomicReference<Double> totalPrice = new AtomicReference<>((double) 0);
-        if (foundOrder.isPresent()) {
+        if (foundCart.getUserID().equals(userID)) {
             List<CartItems> cartItems = cartItemsRepository.findByCartID(id);
-
             cartItems.forEach(
                     item -> {
                         List<Product> foundProducts = productRepository.findByCartItemID(item.getId());
@@ -82,7 +81,7 @@ public class CartService {
         );
     }
 
-    public ResponseEntity<ResponseObject> insertCart(Cart newCart, Long userID) {
+    public ResponseEntity<ResponseObject> addCart(Cart newCart, Long userID) {
         Optional<Cart> foundOrders = cartRepository.findById(newCart.getId());
         if (foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newCart);
@@ -93,36 +92,38 @@ public class CartService {
             logger.info("Insert data successfully. " + newCart);
             newCart.setUserID(userID);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Insert cart successfully", cartRepository.save(newCart))
+                    new ResponseObject("ok", "Add cart successfully", cartRepository.save(newCart))
             );
         }
     }
 
-    public ResponseEntity<ResponseObject> updateCart(Cart newCart, Long id) {
-        Cart updatedCart = cartRepository.findById(id).map(
-                cart -> {
-                    cart.setUserID(newCart.getUserID());
-                    return cartRepository.save(cart);
-                }
-        ).orElseGet(()-> cartRepository.save(newCart));
-        logger.info("Update data successfully. " + newCart);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Update order successfully", updatedCart)
+    public ResponseEntity<ResponseObject> updateCart(Cart newCart, Long id, Long userID) {
+        Cart foundCart = cartRepository.findById(id).get();
+        if (foundCart.getUserID().equals(userID)) {
+            foundCart.setUserID(newCart.getUserID());
+            cartRepository.save(foundCart);
+            logger.info("Update data successfully. " + newCart);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Update cart successfully", foundCart)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new ResponseObject("failed", "Cart doesn't not belong to user ", "")
         );
     }
 
-    public ResponseEntity<ResponseObject> deleteCart(Long id) {
-        boolean existed = cartRepository.existsById(id);
-        if (existed) {
+    public ResponseEntity<ResponseObject> deleteCart(Long id, Long userID) {
+        Cart foundCart = cartRepository.findById(id).get();
+        if (foundCart.getUserID().equals(userID)) {
             logger.info("Delete data successfully");
             cartRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Delete order successfully", "")
+                    new ResponseObject("ok", "Delete cart successfully", "")
             );
         } else {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find order to delete", "")
+                    new ResponseObject("failed", "Cannot find cart to delete", "")
             );
         }
     }

@@ -9,39 +9,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/user/{userId}/cartItems")
+@RequestMapping(path = "api/v1/user/{userId}/cart/cartItems")
 public class CartItemsController {
     @Autowired
     private CartItemsService cartItemsService;
-    @GetMapping
-    public ResponseEntity<ResponseObject> getItems(@PathVariable(name = "userId") Long userId) {
-        return cartItemsService.getAllItems();
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getItem(@PathVariable(name = "userId") Long userId,
                                                   @PathVariable(name = "id") Long id) {
-        return cartItemsService.findById(id);
+        return cartItemsService.getCartItem(id, userId);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertProduct(@RequestBody CartItems newItem,
+    public ResponseEntity<ResponseObject> addItem(@RequestBody CartItems newItem,
                                                         @PathVariable(name = "userId") Long userId) {
-        return cartItemsService.insertItem(newItem);
+        return cartItemsService.addItem(newItem, userId);
     }
 
     @PutMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> updateItem(@RequestBody CartItems newItem,
                                      @PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
-        return cartItemsService.updateItem(newItem, id);
+        return cartItemsService.updateItem(newItem, id, userId);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> deleteItem(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "id") Long id) {
-        return cartItemsService.deleteItem(id);
+        return cartItemsService.deleteItem(id, userId);
     }
 }

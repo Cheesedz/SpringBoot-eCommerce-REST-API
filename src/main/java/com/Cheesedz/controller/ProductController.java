@@ -25,7 +25,7 @@ public class ProductController {
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertProduct(@RequestBody Product newProduct, @PathVariable(name = "shopId") Long shopId) {
+    public ResponseEntity<ResponseObject> addProduct(@RequestBody Product newProduct, @PathVariable(name = "shopId") Long shopId) {
         return productService.addProduct(newProduct, shopId);
     }
 

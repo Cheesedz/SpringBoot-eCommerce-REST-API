@@ -31,7 +31,7 @@ public class ShopController {
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> addShop(@RequestBody Shop newShop) {
-        return shopService.insertShop(newShop);
+        return shopService.addShop(newShop);
     }
 
     @PutMapping("/{id}")

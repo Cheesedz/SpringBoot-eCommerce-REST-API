@@ -25,20 +25,26 @@ public class UserController {
 
     @GetMapping("/{id}/orders")
     //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> findAlOrders(@PathVariable(name = "id") Long id) {
-        return userService.findAllOrders(id);
+    public ResponseEntity<ResponseObject> getAllOrders(@PathVariable(name = "id") Long id) {
+        return userService.getAllOrders(id);
     }
 
     @GetMapping("/{id}/vouchers")
     //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> findAlVouchers(@PathVariable(name = "id") Long id) {
-        return userService.findAllOrders(id);
+    public ResponseEntity<ResponseObject> findAllVouchers(@PathVariable(name = "id") Long id) {
+        return userService.getAllVouchers(id);
+    }
+
+    @GetMapping("/{id}/notifications")
+    //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
+    public ResponseEntity<ResponseObject> getAllNotifications(@PathVariable(name = "id") Long id) {
+        return userService.getAllNotifications(id);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('USER') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertUser(@RequestBody User newUser) {
-        return userService.insertUser(newUser);
+        return userService.addUser(newUser);
     }
 
     @PutMapping("/{id}")

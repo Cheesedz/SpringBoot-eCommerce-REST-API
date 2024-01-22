@@ -1,9 +1,7 @@
 package com.Cheesedz.controller;
 
-import com.Cheesedz.model.Shop;
 import com.Cheesedz.model.Voucher;
 import com.Cheesedz.payload.ResponseObject;
-import com.Cheesedz.service.ShopService;
 import com.Cheesedz.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class VoucherController {
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertVoucher(@PathVariable(name = "userId") Long userId,
                                                      @RequestBody Voucher newVoucher) {
-        return voucherService.insertVoucher(newVoucher, userId);
+        return voucherService.addVoucher(newVoucher, userId);
     }
 
     @PutMapping("/{id}")
