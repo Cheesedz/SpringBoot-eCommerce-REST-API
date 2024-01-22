@@ -4,6 +4,7 @@ import com.Cheesedz.controller.OrderController;
 import com.Cheesedz.controller.ProductController;
 import com.Cheesedz.model.Order;
 import com.Cheesedz.model.Product;
+import com.Cheesedz.model.Voucher;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.OrderRepository;
 import com.Cheesedz.repository.ProductRepository;
@@ -27,8 +28,8 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public ResponseEntity<ResponseObject> getAllOrders() {
-        List<Order> foundOrders = orderRepository.findAll();
+    public ResponseEntity<ResponseObject> getAllOrders(Long userID) {
+        List<Order> foundOrders = orderRepository.findByUserID(userID);
         return foundOrders.size() > 0 ?
                 ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Get all orders successfully", foundOrders)
@@ -38,31 +39,29 @@ public class OrderService {
                 );
     }
 
-    public ResponseEntity<ResponseObject> findById(Long id) {
-        Optional<Order> foundOrders = orderRepository.findById(id);
-        return foundOrders.isPresent() ?
+    public ResponseEntity<ResponseObject> findById(Long id, Long userID) {
+        Order order = orderRepository.findById(id).get();
+        return order.getUserID().equals(userID) ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query order successfully", foundOrders)
+                        new ResponseObject("ok", "Get order successfully", order)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find order with id = " + id, "")
+                        new ResponseObject("failed", "Order doesn't belong to user", "")
                 );
     }
 
-    public ResponseEntity<ResponseObject> findAllProducts(Long id) {
-        List<Object> responses = new ArrayList<>();
-        Optional<Order> foundOrder = orderRepository.findById(id);
-        return foundOrder.isPresent() ?
+    public ResponseEntity<ResponseObject> getAllProducts(Long id, Long userID) {
+        Order order = orderRepository.findById(id).get();
+        return order.getUserID().equals(userID) ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Query order's products successfully",
-                            productRepository.findByOrderID(id))
-            ):
+                        new ResponseObject("ok", "Get order successfully", productRepository.findByOrderID(id))
+                ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("failed", "Cannot find order with id = " + id, "")
-        );
+                        new ResponseObject("failed", "Order doesn't belong to user", "")
+                );
     }
 
-    public ResponseEntity<ResponseObject> insertOrder(Order newOrder) {
+    public ResponseEntity<ResponseObject> insertOrder(Order newOrder, Long userID) {
         Optional<Order> foundOrders = orderRepository.findById(newOrder.getOrderNumber());
         if (foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newOrder);
@@ -70,43 +69,61 @@ public class OrderService {
                     new ResponseObject("failed", "Order id already existed", "")
             );
         } else {
+            newOrder.setUserID(userID);
             logger.info("Insert data successfully. " + newOrder);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Insert order successfully", orderRepository.save(newOrder))
+                    new ResponseObject("ok", "Add order successfully", orderRepository.save(newOrder))
             );
         }
     }
 
-    public ResponseEntity<ResponseObject> updateOrder(Order newOrder, Long id) {
-        Order updatedOrder = orderRepository.findById(id).map(
-                order -> {
-                    order.setUserID(newOrder.getUserID());
-                    order.setVoucherID(newOrder.getVoucherID());
-                    order.setOrderDate(newOrder.getOrderDate());
-                    order.setExpectedShippedDate(newOrder.getExpectedShippedDate());
-                    order.setTypeOfPayment(newOrder.getTypeOfPayment());
-                    order.setStatus(newOrder.getStatus());
-                    return orderRepository.save(order);
-                }
-        ).orElseGet(()-> orderRepository.save(newOrder));
-        logger.info("Update data successfully. " + newOrder);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Update order successfully", updatedOrder)
+    public ResponseEntity<ResponseObject> updateOrder(Order newOrder, Long id, Long userID) {
+        Order foundOrder = orderRepository.findById(id).get();
+        if (foundOrder.getUserID().equals(userID)) {
+            foundOrder.setUserID(newOrder.getUserID());
+            foundOrder.setVoucherID(newOrder.getVoucherID());
+            foundOrder.setOrderDate(newOrder.getOrderDate());
+            foundOrder.setExpectedShippedDate(newOrder.getExpectedShippedDate());
+            foundOrder.setTypeOfPayment(newOrder.getTypeOfPayment());
+            foundOrder.setStatus(newOrder.getStatus());
+            orderRepository.save(foundOrder);
+            logger.info("Update data successfully. " + newOrder);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Update order successfully", foundOrder)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new ResponseObject("failed", "Order doesn't not belong to user ", "")
         );
+//        Order updatedOrder = orderRepository.findById(id).map(
+//                order -> {
+//                    order.setUserID(newOrder.getUserID());
+//                    order.setVoucherID(newOrder.getVoucherID());
+//                    order.setOrderDate(newOrder.getOrderDate());
+//                    order.setExpectedShippedDate(newOrder.getExpectedShippedDate());
+//                    order.setTypeOfPayment(newOrder.getTypeOfPayment());
+//                    order.setStatus(newOrder.getStatus());
+//                    return orderRepository.save(order);
+//                }
+//        ).orElseGet(()-> orderRepository.save(newOrder));
+//        logger.info("Update data successfully. " + newOrder);
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject("ok", "Update order successfully", updatedOrder)
+//        );
     }
 
-    public ResponseEntity<ResponseObject> deleteOrder(Long id) {
-        boolean existed = orderRepository.existsById(id);
-        if (existed) {
+    public ResponseEntity<ResponseObject> deleteOrder(Long id, Long userID) {
+        Order foundOrder = orderRepository.findById(id).get();
+        if (foundOrder.getUserID().equals(userID)) {
             logger.info("Delete data successfully");
-            orderRepository.deleteById(id);
+            productRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Delete order successfully", "")
             );
         } else {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find order to delete", "")
+                    new ResponseObject("failed", "Order doesn't not belong to user", "")
             );
         }
     }

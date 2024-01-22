@@ -16,8 +16,8 @@ public class DBConfig {
     @Bean
     CommandLineRunner initDatabase(ShopRepository shopRepository) {
         return args -> {
-            Shop A = new Shop("ABC", "Mall", "Clothes", "Clothes shop No1 HN", 10100L, 24L, "2020-10-23", 4.6);
-            logger.info("inserted record: " + shopRepository.save(A));
+//            Shop A = new Shop("ABC", "Mall", "Clothes", "Clothes shop No1 HN", 10100L, 24L, "2020-10-23", 4.6);
+//            logger.info("inserted record: " + shopRepository.save(A));
             //logger.info("inserted record: " + orderRepository.save(B));
         };
     }

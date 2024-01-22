@@ -1,6 +1,7 @@
 package com.Cheesedz.service;
 
 import com.Cheesedz.controller.VoucherController;
+import com.Cheesedz.model.Product;
 import com.Cheesedz.model.Voucher;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.repository.UserRepository;
@@ -34,12 +35,12 @@ public class VoucherService {
 
     public ResponseEntity<ResponseObject> getVoucher(Long id, Long userID) {
         Voucher voucher = voucherRepository.findById(id).get();
-        return voucher.getUserID() == userID ?
+        return voucher.getUserID().equals(userID) ?
             ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Query voucher successfully", voucher)
+                    new ResponseObject("ok", "Get voucher successfully", voucher)
             ):
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Voucher with id = " + id + " doesn't belong to this user", "")
+                    new ResponseObject("failed", "Voucher doesn't belong to user", "")
             );
     }
 
@@ -55,43 +56,52 @@ public class VoucherService {
             newVoucher.setUserID(userId);
             logger.info("Insert data successfully. " + newVoucher);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Insert voucher successfully", voucherRepository.save(newVoucher))
+                    new ResponseObject("ok", "Add voucher successfully", voucherRepository.save(newVoucher))
             );
-
         }
     }
 
-    public ResponseEntity<ResponseObject> updateVoucher(Voucher newVoucher, Long id) {
-        Voucher updatedVoucher = voucherRepository.findById(id).map(
-                voucher -> {
-                    voucher.setUserID(newVoucher.getUserID());
-                    voucher.setName(newVoucher.getName());
-                    voucher.setDiscountAmount(newVoucher.getDiscountAmount());
-                    voucher.setExpirationDate(newVoucher.getExpirationDate());
-                    voucher.setMinimumOrderValue(newVoucher.getMinimumOrderValue());
-                    voucher.setDescription(newVoucher.getDescription());
-                    return voucherRepository.save(voucher);
-                }
-        ).orElseGet(()-> voucherRepository.save(newVoucher));
-        logger.info("Update data successfully. " + newVoucher);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Update voucher successfully", updatedVoucher)
+    public ResponseEntity<ResponseObject> updateVoucher(Voucher newVoucher, Long id, Long userID) {
+        Voucher foundVoucher = voucherRepository.findById(id).get();
+        if (foundVoucher.getUserID().equals(userID)) {
+            foundVoucher.setUserID(newVoucher.getUserID());
+            foundVoucher.setName(newVoucher.getName());
+            foundVoucher.setDiscountAmount(newVoucher.getDiscountAmount());
+            foundVoucher.setExpirationDate(newVoucher.getExpirationDate());
+            foundVoucher.setMinimumOrderValue(newVoucher.getMinimumOrderValue());
+            foundVoucher.setDescription(newVoucher.getDescription());
+            voucherRepository.save(foundVoucher);
+            logger.info("Update data successfully. " + newVoucher);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Update voucher successfully", foundVoucher)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new ResponseObject("failed", "Voucher doesn't not belong to user ", "")
         );
     }
 
-    public ResponseEntity<ResponseObject> deleteVoucher(Long id) {
-        boolean existed = voucherRepository.existsById(id);
-        if (existed) {
-            logger.info("Delete data successfully");
-            voucherRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Delete voucher successfully", "")
-            );
-        } else {
+    public ResponseEntity<ResponseObject> deleteVoucher(Long id, Long userID) {
+        Voucher foundVoucher = voucherRepository.findById(id).get();
+        if (foundVoucher == null) {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject("failed", "Cannot find voucher to delete", "")
             );
+        }
+        else {
+            if (foundVoucher.getUserID().equals(userID)) {
+                logger.info("Delete data successfully");
+                voucherRepository.deleteById(id);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Delete voucher successfully", "")
+                );
+            } else {
+                logger.info("Failed to delete data");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("failed", "Voucher doesn't not belong to user", "")
+                );
+            }
         }
     }
 }

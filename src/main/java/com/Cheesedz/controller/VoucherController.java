@@ -37,13 +37,13 @@ public class VoucherController {
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> updateVoucher(@RequestBody Voucher newVoucher,
                                      @PathVariable(name = "userId") Long userId, @PathVariable(name = "id") Long id) {
-        return voucherService.updateVoucher(newVoucher, id);
+        return voucherService.updateVoucher(newVoucher, id, userId);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> deleteVoucher(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "id") Long id) {
-        return voucherService.deleteVoucher(id);
+        return voucherService.deleteVoucher(id, userId);
     }
 }

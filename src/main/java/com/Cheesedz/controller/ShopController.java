@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/shops")
+@RequestMapping(path = "api/v1/shop")
 public class ShopController {
     @Autowired
     private ShopService shopService;
@@ -23,14 +23,14 @@ public class ShopController {
         return shopService.findById(id);
     }
 
-    @GetMapping("/{id}/products")
+    @GetMapping("/{id}/all-products")
     public ResponseEntity<ResponseObject> getAllProducts(@PathVariable(name = "id") Long id) {
         return shopService.findAllProducts(id);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SYSTEM_ADMIN')")
-    public ResponseEntity<ResponseObject> insertShop(@RequestBody Shop newShop) {
+    public ResponseEntity<ResponseObject> addShop(@RequestBody Shop newShop) {
         return shopService.insertShop(newShop);
     }
 

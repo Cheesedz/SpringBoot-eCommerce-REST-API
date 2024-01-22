@@ -15,29 +15,29 @@ public class ProductController {
     private ProductService productService;
     @GetMapping("")
     public ResponseEntity<ResponseObject> getAllProducts(@PathVariable(name = "shopId") Long shopId) {
-        return productService.getAllProducts();
+        return productService.getAllProducts(shopId);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProduct(@PathVariable(name = "shopId") Long shopId, @PathVariable(name = "id") Long id) {
-        return productService.findById(id);
+        return productService.findById(id, shopId);
     }
 
     @PostMapping("/insert")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> insertProduct(@RequestBody Product newProduct, @PathVariable(name = "shopId") Long shopId) {
-        return productService.insertProduct(newProduct);
+        return productService.addProduct(newProduct, shopId);
     }
 
     @PutMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product newProduct, @PathVariable(name = "shopId") Long shopId, @PathVariable(name = "id") Long id) {
-        return productService.updateProduct(newProduct, id);
+        return productService.updateProduct(newProduct, id, shopId);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('SHOP_ADMIN') or hasRole('SYSTEM_ADMIN')")
     public ResponseEntity<ResponseObject> deleteProduct(@PathVariable(name = "shopId") Long shopId, @PathVariable(name = "id") Long id) {
-        return productService.deleteProduct(id);
+        return productService.deleteProduct(id, shopId);
     }
 }
