@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/user/{userId}/vouchers")
+@RequestMapping(path = "api/user/{userId}/vouchers")
 public class VoucherController {
     @Autowired
     private VoucherService voucherService;

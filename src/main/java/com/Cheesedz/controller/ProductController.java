@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/shop/{shopId}/products")
+@RequestMapping(path = "api/shop/{shopId}/products")
 public class ProductController {
     @Autowired
     private ProductService productService;

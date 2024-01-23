@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/user/{userId}/notifications")
+@RequestMapping(path = "api/user/{userId}/notifications")
 public class NotificationController {
     @Autowired
     private NotificationService notificationService;

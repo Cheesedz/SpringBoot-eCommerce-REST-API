@@ -1,5 +1,6 @@
 package com.Cheesedz.controller;
 
+import com.Cheesedz.exception.ResponseEntityErrorException;
 import com.Cheesedz.model.Cart;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.CartService;
@@ -9,10 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/user/{userId}/cart")
+@RequestMapping(path = "api/user/{userId}/cart")
 public class CartController {
     @Autowired
     private CartService cartService;
+
+    @ExceptionHandler(ResponseEntityErrorException.class)
+    public ResponseEntity<ResponseObject> handleExceptions(ResponseEntityErrorException exception) {
+        return exception.getApiResponse();
+    }
     @GetMapping("")
     public ResponseEntity<ResponseObject> getCart(@PathVariable(name = "userId") Long userId) {
         return cartService.getCart(userId);

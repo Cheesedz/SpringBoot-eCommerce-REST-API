@@ -2,9 +2,11 @@ package com.Cheesedz.model.role;
 
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "roles")
 public class Role {
     @Id

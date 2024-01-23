@@ -1,13 +1,11 @@
 package com.Cheesedz.model;
 
 import com.Cheesedz.model.role.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -32,6 +30,8 @@ public class User {
     private String gender;
     private String dob;
     private String password;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
     public User(String username, String name, String email, String phone, String gender, String dob, String password) {
         this.username = username;
