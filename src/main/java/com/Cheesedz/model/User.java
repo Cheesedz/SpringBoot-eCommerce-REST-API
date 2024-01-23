@@ -1,5 +1,6 @@
 package com.Cheesedz.model;
 
+import com.Cheesedz.model.role.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,26 +25,22 @@ public class User {
             generator = "user_seq"
     )
     private Long id;
-
     private String username;
-
     private String name;
-
     private String email;
-
     private String phone;
-
     private String gender;
-
     private String dob;
-
-    public User(String username, String name, String email, String phone, String gender, String dob) {
+    private String password;
+    private List<Role> roles;
+    public User(String username, String name, String email, String phone, String gender, String dob, String password) {
         this.username = username;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.gender = gender;
         this.dob = dob;
+        this.password = password;
     }
 
     public Long getId() {
@@ -100,6 +97,26 @@ public class User {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles == null ? null : new ArrayList<>(roles);
+    }
+
+    public void setRoles(List<Role> roles) {
+        if (roles == null) {
+            this.roles = null;
+        } else {
+            this.roles = new ArrayList<>(roles);
+        }
     }
 
     @Override
