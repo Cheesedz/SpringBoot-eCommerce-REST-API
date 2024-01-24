@@ -23,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -39,22 +38,30 @@ import static org.springframework.http.HttpMethod.POST;
 public class SecurityConfig {
     @Value(value = "${app.apiPrefix}")
     private String apiPrefix;
-    private final UserDetailsService customUserDetailsService;
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public SecurityConfig(UserDetailsService customUserDetailsService, UserRepository userRepository,
-                          JwtAuthenticationEntryPoint unauthorizedHandler, JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(){
+        return new JwtAuthenticationFilter();
     }
+
+//    @Autowired
+//    public SecurityConfig(CustomUserDetailService customUserDetailService, UserRepository userRepository,
+//                          JwtAuthenticationEntryPoint unauthorizedHandler, JwtAuthenticationFilter jwtAuthenticationFilter) {
+//        this.customUserDetailService = customUserDetailService;
+//        this.unauthorizedHandler = unauthorizedHandler;
+//        //this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
@@ -62,33 +69,27 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeHttpRequests(requests -> {
-                    requests
-                            .anyRequest().authenticated()
-                            .requestMatchers(
-                                    String.format("%s/auth/signup", apiPrefix),
-                                    String.format("%s/auth/login", apiPrefix),
-                                    String.format("%s", apiPrefix)
-                            )
-                            .permitAll()
-                            .requestMatchers(GET,
-                                    String.format("%s/api/**", apiPrefix)).permitAll()
-                            .requestMatchers(POST,
-                                    String.format("%s/api/auth/**", apiPrefix)).permitAll()
-                            .requestMatchers(GET,
-                                    String.format("%s/api/users/checkUsernameAvailability", apiPrefix),
-                                    String.format("%s/api/users/checkEmailAvailability", apiPrefix)
-                                    ).permitAll();
-                });
+                .authorizeHttpRequests(requests -> requests
+//                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                String.format("%s/auth/signup", apiPrefix),
+                                String.format("%s/auth/login", apiPrefix),
+                                String.format("%s", apiPrefix)
+                        )
+                        .permitAll()
+                        .requestMatchers(GET,
+                                String.format("%s/api/**", apiPrefix)).permitAll()
+                        .requestMatchers(POST,
+                                String.format("%s/api/auth/**", apiPrefix)).permitAll()
+                        .requestMatchers(GET,
+                                String.format("%s/api/users/checkUsernameAvailability", apiPrefix),
+                                String.format("%s/api/users/checkEmailAvailability", apiPrefix)
+                                ).permitAll());
+
         return http.build();
     }
 
     @Bean
-    CustomUserDetailService service() {
-        return new CustomUserDetailService();
-    }
-
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }

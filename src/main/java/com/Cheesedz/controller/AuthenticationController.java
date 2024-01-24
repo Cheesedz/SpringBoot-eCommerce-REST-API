@@ -5,10 +5,7 @@ import com.Cheesedz.exception.eCommerceApiException;
 import com.Cheesedz.model.role.Role;
 import com.Cheesedz.model.role.RoleName;
 import com.Cheesedz.model.User;
-import com.Cheesedz.payload.ResponseObject;
-import com.Cheesedz.payload.JwtAuthenticationResponse;
-import com.Cheesedz.payload.LoginRequest;
-import com.Cheesedz.payload.SignUpRequest;
+import com.Cheesedz.payload.*;
 import com.Cheesedz.repository.RoleRepository;
 import com.Cheesedz.repository.UserRepository;
 import com.Cheesedz.security.JwtTokenProvider;
@@ -52,18 +49,20 @@ public class AuthenticationController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtTokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new LoginResponse("Login successfully", new JwtAuthenticationResponse(jwt))
+        );
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseObject> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignupResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpRequest.getUsername()))) {
             throw new eCommerceApiException(HttpStatus.BAD_REQUEST, "Username is already taken");
         }
@@ -109,6 +108,6 @@ public class AuthenticationController {
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{userId}")
                 .buildAndExpand(result.getId()).toUri();
 
-        return ResponseEntity.created(location).body(new ResponseObject("OK", "User registered successfully", ""));
+        return ResponseEntity.created(location).body(new SignupResponse("OK", "Sign up successfully"));
     }
 }

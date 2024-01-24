@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class SignUpRequest {
+public class SignupRequest {
     @NotNull
     @Size(min = 4, max = 40)
     private String name;
@@ -19,6 +19,7 @@ public class SignUpRequest {
     private String email;
 
     @NotNull
+    @Size(max = 6)
     private String gender;
 
     @NotNull
