@@ -1,12 +1,11 @@
 package com.Cheesedz.service;
 
 import com.Cheesedz.controller.UserController;
+import com.Cheesedz.model.Cart;
+import com.Cheesedz.model.CartItems;
 import com.Cheesedz.model.User;
 import com.Cheesedz.payload.ResponseObject;
-import com.Cheesedz.repository.NotificationRepository;
-import com.Cheesedz.repository.OrderRepository;
-import com.Cheesedz.repository.UserRepository;
-import com.Cheesedz.repository.VoucherRepository;
+import com.Cheesedz.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +27,41 @@ public class UserService {
     private NotificationRepository notificationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CartItemsRepository cartItemsRepository;
+    @Autowired
+    private CartRepository cartRepository;
+
+    public ResponseEntity<ResponseObject> checkEmailAvailability(String email) {
+        Boolean existed = userRepository.existsByEmail(email);
+        return existed ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "Email is valid", "")
+                ):
+                ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                        new ResponseObject("FAILED", "Email is already taken", "")
+                );
+    }
+
+    public ResponseEntity<ResponseObject> checkUsernameAvailability(String username) {
+        Boolean existed = userRepository.existsByUsername(username);
+        return existed ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "Username is valid", "")
+                ):
+                ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                        new ResponseObject("FAILED", "Username is already taken", "")
+                );
+    }
 
     public ResponseEntity<ResponseObject> getAllUsers() {
         List<User> foundUsers = userRepository.findAll();
         return foundUsers.size() > 0 ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Get all users successfully", foundUsers)
+                        new ResponseObject("OK", "Get all users successfully", foundUsers)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find any users", "")
+                        new ResponseObject("FAILED", "Cannot find any users", "")
                 );
     }
 
@@ -44,10 +69,10 @@ public class UserService {
         Optional<User> foundUsers = userRepository.findById(id);
         return foundUsers.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query order successfully", foundUsers)
+                        new ResponseObject("OK", "Get user successfully", foundUsers)
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                        new ResponseObject("FAILED", "Cannot find user with id = " + id, "")
                 );
     }
 
@@ -55,11 +80,11 @@ public class UserService {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query user's orders successfully",
+                        new ResponseObject("OK", "Get user's orders successfully",
                                 orderRepository.findByUserID(id))
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                        new ResponseObject("FAILED", "Cannot find user with id = " + id, "")
                 );
     }
 
@@ -67,11 +92,11 @@ public class UserService {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query user's vouchers successfully",
+                        new ResponseObject("OK", "Get user's vouchers successfully",
                                 voucherRepository.findByUserID(id))
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                        new ResponseObject("FAILED", "Cannot find user with id = " + id, "")
                 );
     }
 
@@ -79,12 +104,37 @@ public class UserService {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.isPresent() ?
                 ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok", "Query user's notifications successfully",
+                        new ResponseObject("OK", "Get user's notifications successfully",
                                 notificationRepository.findByUserID(id))
                 ):
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed", "Cannot find user with id = " + id, "")
+                        new ResponseObject("FAILED", "Cannot find user with id = " + id, "")
                 );
+    }
+    public ResponseEntity<ResponseObject> getAllCartItems(Long id) {
+        Optional<User> foundUser = userRepository.findById(id);
+        if (foundUser.isPresent()) {
+            Cart foundCart = cartRepository.findByUserID(id).get(0);
+            if (foundCart != null) {
+                List<CartItems> foundItems = cartItemsRepository.findByCartID(foundCart.getId());
+                if (foundItems.size() > 0) {
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("OK", "Get all user's cart items successfully", foundItems)
+                    );
+                }
+                else {
+                    return ResponseEntity.status(HttpStatus.OK).body(
+                            new ResponseObject("OK", "There's no items in user's cart","")
+                    );
+                }
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("FAILED", "Cannot find user's cart","")
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseObject("FAILED", "Cannot find user with id=" + id, "")
+        );
     }
 
     public ResponseEntity<ResponseObject> addUser(User newUser) {
@@ -92,12 +142,12 @@ public class UserService {
         if (foundUsers.size() > 0) {
             logger.info("Failed to insert data: " + newUser);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                    new ResponseObject("failed", "Username already existed", "")
+                    new ResponseObject("FAILED", "Username is already existed", "")
             );
         } else {
             logger.info("Insert data successfully. " + newUser);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Insert user successfully", userRepository.save(newUser))
+                    new ResponseObject("OK", "Add user successfully", userRepository.save(newUser))
             );
         }
     }
@@ -116,7 +166,7 @@ public class UserService {
         ).orElseGet(()-> userRepository.save(newUser));
         logger.info("Update data successfully. " + newUser);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Update user successfully", updatedUser)
+                new ResponseObject("OK", "Update user successfully", updatedUser)
         );
     }
 
@@ -126,13 +176,15 @@ public class UserService {
             logger.info("Delete data successfully");
             userRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Delete user successfully", "")
+                    new ResponseObject("OK", "Delete user successfully", "")
             );
         } else {
             logger.info("Failed to delete data");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed", "Cannot find user to delete", "")
+                    new ResponseObject("FAILED", "Cannot find user to delete", "")
             );
         }
     }
+
+
 }
