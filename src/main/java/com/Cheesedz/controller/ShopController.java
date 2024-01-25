@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/shop")
+@RequestMapping(path = "api/shops")
 public class ShopController {
     @Autowired
     private ShopService shopService;

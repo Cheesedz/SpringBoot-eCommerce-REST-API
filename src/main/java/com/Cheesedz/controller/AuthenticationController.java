@@ -81,27 +81,25 @@ public class AuthenticationController {
 
         String gender = signUpRequest.getGender().toLowerCase();
 
+        Long roleID = signUpRequest.getRoleID();
+
         String dob = signUpRequest.getDob().toLowerCase();
 
         String password = passwordEncoder.encode(signUpRequest.getPassword());
 
         User user = new User(username, name,  email, phone, gender, dob, password);
 
-        List<Role> roles = new ArrayList<>();
-
-        if (userRepository.count() == 0) {
-            roles.add(roleRepository.findByName(RoleName.SYSTEM_ADMIN)
-                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
-            roles.add(roleRepository.findByName(RoleName.SHOP_ADMIN)
-                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
-            roles.add(roleRepository.findByName(RoleName.USER)
-                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
-        } else {
-            roles.add(roleRepository.findByName(RoleName.USER)
-                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
-        }
-
-        user.setRoles(roles);
+//        List<Role> roles = new ArrayList<>();
+//
+//        if (userRepository.count() == 0) {
+//            roles.add(roleRepository.findById(roleID)
+//                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
+//        } else {
+//            roles.add(roleRepository.findByName(RoleName.USER)
+//                    .orElseThrow(() -> new AppException(USER_ROLE_NOT_SET)));
+//        }
+//
+//        user.setRoles(roleID);
 
         User result = userRepository.save(user);
 

@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -61,31 +62,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .cors(withDefaults())
                 .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandler)
-                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(unauthorizedHandler)
+//                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(requests -> requests
-//                        .anyRequest().authenticated()
-                        .requestMatchers(
-                                String.format("%s/auth/signup", apiPrefix),
-                                String.format("%s/auth/login", apiPrefix),
-                                String.format("%s", apiPrefix)
-                        )
-                        .permitAll()
                         .requestMatchers(GET,
-                                String.format("%s/api/**", apiPrefix)).permitAll()
+                                String.format("%s/**", apiPrefix)).permitAll()
                         .requestMatchers(POST,
-                                String.format("%s/api/auth/**", apiPrefix)).permitAll()
+                                String.format("%s/auth/**", apiPrefix)).permitAll()
                         .requestMatchers(GET,
-                                String.format("%s/api/users/checkUsernameAvailability", apiPrefix),
-                                String.format("%s/api/users/checkEmailAvailability", apiPrefix)
-                                ).permitAll());
+                                String.format("%s/users/checkUsernameAvailability", apiPrefix)).permitAll()
+                        .requestMatchers(GET,
+                                String.format("%s/users/checkEmailAvailability", apiPrefix)).permitAll()
+                        .anyRequest().authenticated());
 
+        http
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .formLogin(withDefaults())
+                .httpBasic(withDefaults());
         return http.build();
     }
 

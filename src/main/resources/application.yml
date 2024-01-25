@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3307/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: ChiNghia08062004
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,7 +16,7 @@ spring:
     time-zone: UTC
 
 app:
-  apiPrefix: http://localhost:8080/api/v1
+  apiPrefix: localhost:8080/api
   jwtSecret: secret123
   jwtExpirationInMs: 3600000
 
