@@ -1,13 +1,20 @@
 # Spring Boot e-Commerce REST API
 
-Build Restful CRUD API for an e-commerce system using Spring Boot, Mysql, JPA, and Hibernate.
+Build Restful CRUD API for an e-commerce system
+
+# Tools
++ Spring Boot 3.2.1
++ Spring Security 6
++ MySQL 8
++ JPA
++ Hibernate
 
 ## Steps to Setup
 
 **1. Clone the application**
 
 ```bash
-git clone https://github.com/coma123/Spring-Boot-Blog-REST-API.git
+git clone https://github.com/Cheesedz/SpringBoot-eCommerce-REST-API.git
 ```
 
 **2. Create Mysql database**
@@ -37,18 +44,18 @@ The app defines the following CRUD APIs.
 | Method | Url | Decription | Sample Valid Request Body | 
 | ------ | --- | ---------- | --------------------------- |
 | POST   | /api/auth/signup | Sign up | [JSON](#signup) |
-| POST   | /api/auth/signin | Log in | [JSON](#signin) |
+| POST   | /api/auth/login | Log in | [JSON](#login) |
 
 ### Users
 
 | Method | Url | Description | Sample Valid Request Body |
 | ------ | --- | ----------- | ------------------------- |
 | GET    | /api/users | Get all users (Only for admins) | |
-| GET    | /api/users/{id} | Get user profile by id | |
-| GET    | /api/users/{id}/orders | Get all user's orders by id | |
-| GET    | /api/users/{id}/cart | Get all user's cart items by id | |
-| GET    | /api/users/{id}/vouchers | Get all user's vouchers by id | |
-| GET    | /api/users/{id}/notifications | Get all user's notifications by id | |
+| GET    | /api/users/{id} | Get user profile by id (For logged in user) | |
+| GET    | /api/users/{id}/orders | Get all user's orders by id (For logged in user) | |
+| GET    | /api/users/{id}/cart | Get all user's cart by id (For logged in user) | |
+| GET    | /api/users/{id}/vouchers | Get all user's vouchers by id (For logged in user) | |
+| GET    | /api/users/{id}/notifications | Get all user's notifications by id (For logged in user) | |
 | GET    | /api/users/checkUsernameAvailability | Check if username is available to register | |
 | GET    | /api/users/checkEmailAvailability | Check if email is available to register | |
 | POST   | /api/users/add | Add user (Only for admins) | [JSON](#usercreate) |
@@ -62,225 +69,239 @@ The app defines the following CRUD APIs.
 | GET    | /api/shops | Get all shops (Only for admins) | |
 | GET    | /api/shops/{id} | Get shop by id | |
 | GET    | /api/shops/{id}/all-products | Get all shop's products by shop's id | |
-| POST   | /api/shops/add | Add new shop (By admin only) | [JSON](#postcreate) |
-| PUT    | /api/shops/{id} | Update post (For shop or admin) | [JSON](#postupdate) |
-| DELETE | /api/posts/{id} | Delete post (For shop or admin) | |
+| POST   | /api/shops/add | Add new shop (By admin only) | [JSON](#shopcreate) |
+| PUT    | /api/shops/{id} | Update shop (For shop or admin) | [JSON](#shopupdate) |
+| DELETE | /api/shops/{id} | Delete shop (For shop or admin) | |
 
 ### Products
 
 | Method | Url | Description | Sample Valid Request Body |
 | ------ | --- | ----------- | ------------------------- |
-| GET    | /api/shops | Get all shops (Only for admins) | |
-| GET    | /api/shops/{id} | Get shop by id | |
-| GET    | /api/shops/{id}/all-products | Get all shop's products by shop's id | |
-| POST   | /api/shops/add | Add new shop (By admin only) | [JSON](#postcreate) |
-| PUT    | /api/shops/{id} | Update post (For shop or admin) | [JSON](#postupdate) |
-| DELETE | /api/posts/{id} | Delete post (For shop or admin) | |
-### Albums
+| GET    | /api/shops/{shopId}/products | Get all shop's products | |
+| GET    | /api/shops/{shopId}/products/id | Get shop's product by id | |
+| POST   | /api/shops/{shopId}/products/add | Add new product (By shop only) | [JSON](#productcreate) |
+| PUT    | /api/shops/{id} | Update product (For shop or admin) | [JSON](#productupdate) |
+| DELETE | /api/posts/{id} | Delete product (For shop or admin) | |
+
+### Cart
 
 | Method | Url | Description | Sample Valid Request Body |
 | ------ | --- | ----------- | ------------------------- |
-| GET    | /api/albums | Get all albums | |
-| GET    | /api/albums/{id} | Get album by id | |
-| POST   | /api/albums | Create new album (By logged in user) | [JSON](#albumcreate) |
-| PUT    | /api/albums/{id} | Update album (If album belongs to logged in user or logged in user is admin) | [JSON](#albumupdate) |
-| DELETE | /api/albums/{id} | Delete album (If album belongs to logged in user or logged in user is admin) | |
-| GET    | /api/albums/{id}/photos | Get all photos which belongs to album with id = id | |
+| GET    | /api/users/{userId}/cart | Get user's cart (For logged in user or admin) | |
+| GET    | /api/users/{userId}/cart/cartItems | Get all user's cart items (For logged in user or admin) | |
+| GET    | /api/users/{userId}/cart/price | Get total price of cart (By logged in user) | |
+| POST   | /api/users/{userId}/cart/add | Add new cart (Only by admin) | [JSON](#cartcreate) |
+| PUT    | /api/users/{userId}/cart/{id} | Update cart (If cart belongs to logged in user or admin) | [JSON](#cartupdate) |
+| DELETE | /api/users/{userId}/cart/{id} | Delete cart (If cart belongs to logged in user or admin) | |
 
-### Photos
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| GET    | /api/photos | Get all photos | |
-| GET    | /api/photos/{id} | Get photo by id | |
-| POST   | /api/photos | Create new photo (By logged in user) | [JSON](#photocreate) |
-| PUT    | /api/photos/{id} | Update photo (If photo belongs to logged in user or logged in user is admin) | [JSON](#photoupdate) |
-| DELETE | /api/photos/{id} | Delete photo (If photo belongs to logged in user or logged in user is admin) | |
-
-### Todos
+### CartItems
 
 | Method | Url | Description | Sample Valid Request Body |
 | ------ | --- | ----------- | ------------------------- |
-| GET    | /api/todos | Get all todos which belongs to logged in user | |
-| GET    | /api/todos/{id} | Get todo by id (If todo belongs to logged in user) | |
-| POST   | /api/todos | Create new todo (By logged in user) | [JSON](#todocreate) |
-| PUT    | /api/todos/{id} | Update todo (If todo belongs to logged in user) | [JSON](#todoupdate) |
-| DELETE | /api/todos/{id} | Delete todo (If todo belongs to logged in user) | |
-| PUT    | /api/todos/{id}/complete | Mark todo as complete (If todo belongs to logged in user) | |
-| PUT    | /api/todos/{id}/unComplete | Mark todo as uncomplete (If todo belongs to logged in user) | |
+| GET    | /api/users/{userId}/cart/cartItems/{id} | Get user's cart item by id (For logged in user or admin) | |
+| POST   | /api/users/{userId}/cart/cartItems/add | Add new cart item (Only by user) | [JSON](#cartItemcreate) |
+| PUT    | /api/users/{userId}/cart/cartItems/{id} | Update cart item (If cart belongs to logged in user or admin) | [JSON](#cartItemupdate) |
+| DELETE | /api/users/{userId}/cart/cartItems/{id} | Delete cart item (If cart belongs to logged in user or admin) | |
 
-Test them using postman or any other rest client.
+### Notifications
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| GET    | /api/users/{userId}/notifications | Get all user's notifications (For logged in user or admin) | |
+| GET    | /api/users/{userId}/notifications/{id} | Get user's notification by id (For logged in user or admin) | |
+| POST   | /api/users/{userId}/notifications/add | Add new notification (By shop or admin) | [JSON](#notificationcreate) |
+| PUT    | /api/users/{userId}/notifications/{id} | Update notification (By shop or admin) | [JSON](#notificationupdate) |
+| DELETE | /api/users/{userId}/notifications/{id} | Delete notification (By shop or admin) | |
+
+### Vouchers
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| GET    | /api/users/{userId}/vouchers | Get all user's vouchers (For logged in user or admin) | |
+| GET    | /api/users/{userId}/vouchers/{id} | Get user's voucher by id (For logged in user or admin) | |
+| POST   | /api/users/{userId}/vouchers/add | Add new voucher (By shop or admin) | [JSON](#vouchercreate) |
+| PUT    | /api/users/{userId}/vouchers/{id} | Update voucher (By shop or admin) | [JSON](#voucherupdate) |
+| DELETE | /api/users/{userId}/vouchers/{id} | Delete voucher (By shop or admin) | |
+
+Test them using Postman or any other rest client.
 
 ## Sample Valid JSON Request Bodys
 
 ##### <a id="signup">Sign Up -> /api/auth/signup</a>
 ```json
 {
-	"firstName": "Leanne",
-	"lastName": "Graham",
-	"username": "leanne",
-	"password": "password",
-	"email": "leanne.graham@gmail.com"
-}
-```
-
-##### <a id="signin">Log In -> /api/auth/signin</a>
-```json
-{
-	"usernameOrEmail": "leanne",
+	"name": "Nguyen Van A",
+	"username": "abcdxyz",
+	"email": "abcd@gmail.com",
+	"gender": "male",
+	"dob": "1995-02-15",
+	"phone": "0123456789",
 	"password": "password"
 }
 ```
 
-##### <a id="usercreate">Create User -> /api/users</a>
+##### <a id="login">Log In -> /api/auth/login</a>
 ```json
 {
-	"firstName": "Ervin",
-	"lastName": "Howell",
-	"username": "ervin",
-	"password": "password",
-	"email": "ervin.howell@gmail.com",
-	"address": {
-		"street": "Victor Plains",
-		"suite": "Suite 879",
-		"city": "Wisokyburgh",
-		"zipcode": "90566-7771",
-		"geo": {
-			"lat": "-43.9509",
-			"lng": "-34.4618"
-		}
-	},
-	"phone": "010-692-6593 x09125",
-	"website": "http://erwinhowell.com",
-	"company": {
-		"name": "Deckow-Crist",
-		"catchPhrase": "Proactive didactic contingency",
-		"bs": "synergize scalable supply-chains"
-	}
+	"usernameOrEmail": "abcd123",
+	"password": "password"
 }
 ```
 
-##### <a id="userupdate">Update User -> /api/users/{username}</a>
+##### <a id="usercreate">Create User -> /api/users/add</a>
 ```json
 {
-	"firstName": "Ervin",
-	"lastName": "Howell",
-	"username": "ervin",
-	"password": "updatedpassword",
-	"email": "ervin.howell@gmail.com",
-	"address": {
-		"street": "Victor Plains",
-		"suite": "Suite 879",
-		"city": "Wisokyburgh",
-		"zipcode": "90566-7771",
-		"geo": {
-			"lat": "-43.9509",
-			"lng": "-34.4618"
-		}
-	},
-	"phone": "010-692-6593 x09125",
-	"website": "http://erwinhowell.com",
-	"company": {
-		"name": "Deckow-Crist",
-		"catchPhrase": "Proactive didactic contingency",
-		"bs": "synergize scalable supply-chains"
-	}
+	"username": "tuandz",
+	"name": "Nguyen Viet Tuan",
+	"email": "tuan@gmail.com",
+	"phone": "0974921999",
+	"gender": "male",
+	"dob": "2004-01-17"
 }
 ```
 
-##### <a id="userinfoupdate">Update User Profile -> /api/users/setOrUpdateInfo</a>
+##### <a id="userupdate">Update User -> /api/users/{id}</a>
 ```json
 {
-	"street": "Douglas Extension",
-	"suite": "Suite 847",
-	"city": "McKenziehaven",
-	"zipcode": "59590-4157",
-	"companyName": "Romaguera-Jacobson",
-	"catchPhrase": "Face to face bifurcated interface",
-	"bs": "e-enable strategic applications",
-	"website": "http://ramiro.info",
-	"phone": "1-463-123-4447",
-	"lat": "-68.6102",
-	"lng": "-47.0653"
+	"username": "tuandzvl",
+	"name": "Nguyen Viet Tuan",
+	"email": "tuan@gmail.com",
+	"phone": "0974921999",
+	"gender": "male",
+	"dob": "2004-01-17"
 }
 ```
 
-##### <a id="postcreate">Create Post -> /api/posts</a>
+##### <a id="shopcreate">Create Shop -> /api/shops/add</a>
 ```json
 {
-	"title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-	"body": "quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto"
+	"name": "Yamaha Town Le Van Luong",
+	"typeOfShop": "Mall",
+	"typeOfProduct": "Motorbike",
+	"description": "One of the most famous motor showrooms in Ha Noi",
+	"followers": "11549",
+	"following": "412",
+	"joiningDate": "2019-10-25",
+	"rating": "4.9"
 }
 ```
 
-##### <a id="postupdate">Update Post -> /api/posts/{id}</a>
+##### <a id="shopupdate">Update Shop -> /api/shops/{id}</a>
 ```json
 {
-	"title": "UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED",
-	"body": "UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED "
+	"name": "Yamaha Town Xuan Thuy",
+	"typeOfShop": "Mall",
+	"typeOfProduct": "Motorbike",
+	"description": "One of the most famous motor showrooms in Ha Noi",
+	"followers": "10241",
+	"following": "122",
+	"joiningDate": "2022-12-15",
+	"rating": "4.6"
 }
 ```
 
-##### <a id="commentcreate">Create Comment -> /api/posts/{postId}/comments</a>
+##### <a id="productcreate">Create Product ->/api/shops/{shopId}/products/add</a>
 ```json
 {
-	"body": "laudantium enim quasi est quidem magnam voluptate ipsam eos tempora quo necessitatibus dolor quam autem quasi reiciendis et nam sapiente accusantium"
+	"productId": 12,
+	"name": "Yamaha Sirius",
+        "category": "Motorbike",
+        "description": "Smooth",
+        "shopName": "Yamaha Town",
+        "sold": 9250,
+        "price": 1920.0,
+        "rating": 5.0,
+        "available": 5813,
+        "imgURL": ""
 }
 ```
 
-##### <a id="commentupdate">Update Comment -> /api/posts/{postId}/comments/{id}</a>
+##### <a id="productupdate">Update Product ->/api/shops/{shopId}/products/{id}</a>
 ```json
 {
-	"body": "UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED UPDATED "
+	"productId": 16,
+	"name": "Yamaha Jupiter",
+        "category": "Motorbike",
+        "description": "Exciting",
+        "shopName": "Yamaha Town",
+        "sold": 1250,
+        "price": 1720.0,
+        "rating": 5.0,
+        "available": 5113,
+        "imgURL": ""
 }
 ```
 
-##### <a id="albumcreate">Create Album -> /api/albums</a>
+##### <a id="cartcreate">Create Cart -> /api/users/{userId}/cart/add</a>
 ```json
 {
-	"title": "quidem molestiae enim"
+	"userId": 102
 }
 ```
 
-##### <a id="albumupdate">Update Album -> /api/albums/{id}</a>
+##### <a id="cartupdate">Update Cart -> /api/users/{userId}/cart/{id}</a>
 ```json
 {
-	"title": "quidem molestiae enim UPDATED"
+	"userId": 132
 }
 ```
 
-##### <a id="photocreate">Create Photo -> /api/photos</a>
+##### <a id="cartItemcreate">Create Album -> /api/users/{userId}/cart/cartItems/add</a>
 ```json
 {
-	"title": "accusamus beatae ad facilis cum similique qui sunt",
-	"url": "https://via.placeholder.com/600/92c952",
-	"thumbnailUrl": "https://via.placeholder.com/150/92c952",
-	"albumId": 2
+	"cartId": 212,
+	"productId": 12,
+	"quantity": 3
 }
 ```
 
-##### <a id="photoupdate">Update Photo -> /api/photos{id}</a>
+##### <a id="cartItemupdate">Update Album -> /api/users/{userId}/cart/cartItems/{id}</a>
 ```json
 {
-	"title": "accusamus beatae ad facilis ",
-	"url": "https://via.placeholder.com/600/771796",
-	"thumbnailUrl": "https://via.placeholder.com/150/771796",
-	"albumId": 4
+	"cartId": 212,
+	"productId": 16,
+	"quantity": 1
 }
 ```
 
-##### <a id="todocreate">Create Todo -> /api/todos</a>
+##### <a id="notificationcreate">Create Notification -> /api/users/{userId}/notifications/add</a>
 ```json
 {
-	"title": "delectus aut autem",
-	"completed": false
+	"title": "Exciting News! You Have a Chance to Win a Voucher!",
+	"detailContent": "We hope this message finds you well! We're thrilled to inform you that you've been selected for an exclusive opportunity to win a fantastic voucher!",
+	"userId": 123
 }
 ```
 
-##### <a id="todoupdate">Update Todo -> /api/todos{id}</a>
+##### <a id="notificationupdate">Update Notification -> /api/users/{userId}/notifications/{id}</a>
 ```json
 {
-	"title": "delectus aut autem Updated",
-	"completed": true
+	"title": "Exciting News! You Have a Chance to Win a Voucher!",
+	"detailContent": "We hope this message finds you well! We're thrilled to inform you that you've been selected for an exclusive opportunity to win a fantastic voucher!",
+	"userId": 101
+}
+```
+
+##### <a id="vouchercreate">Create Voucher -> /api/users/{userId}/vouchers/add</a>
+```json
+{
+	"name": "Free ship upto 15K",
+	"description": "Only apply to all products",
+	"minimumOrderValue": 20.0,
+	"discountAmount": 15.0,
+	"expirationDate": "2024-02-14",
+	"userId": 201
+}
+```
+
+##### <a id="voucherupdate">Update Todo -> /api/users/{userId}/vouchers/{id}</a>
+```json
+{
+	"name": "SAVE20NOW",
+	"description": "Enjoy a special discount of 20% on your next purchase!",
+	"minimumOrderValue": 50.0,
+	"discountAmount": 20.0,
+	"expirationDate": "2024-12-31",
+	"userId": 221
 }
 ```
