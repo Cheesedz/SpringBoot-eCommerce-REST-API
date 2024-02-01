@@ -294,7 +294,7 @@ Test them using Postman or any other rest client.
 }
 ```
 
-##### <a id="voucherupdate">Update Todo -> /api/users/{userId}/vouchers/{id}</a>
+##### <a id="voucherupdate">Update Voucher-> /api/users/{userId}/vouchers/{id}</a>
 ```json
 {
 	"name": "SAVE20NOW",
