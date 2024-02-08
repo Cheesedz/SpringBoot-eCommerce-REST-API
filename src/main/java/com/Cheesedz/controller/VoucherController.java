@@ -3,6 +3,7 @@ package com.Cheesedz.controller;
 import com.Cheesedz.model.Voucher;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.VoucherService;
+import com.Cheesedz.service.impl.VoucherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

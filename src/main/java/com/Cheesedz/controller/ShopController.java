@@ -3,6 +3,7 @@ package com.Cheesedz.controller;
 import com.Cheesedz.model.Shop;
 import com.Cheesedz.payload.ResponseObject;
 import com.Cheesedz.service.ShopService;
+import com.Cheesedz.service.impl.ShopServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
