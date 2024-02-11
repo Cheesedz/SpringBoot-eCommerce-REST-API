@@ -23,59 +23,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-//    @Value(value = "${app.apiPrefix}")
-//    private String apiPrefix;
 
     private final CustomUserDetailServiceImpl customUserDetailService;
 
-//    @Autowired
-//    private JwtAuthenticationEntryPoint unauthorizedHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-//    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter(){
-//        return new JwtAuthenticationFilter();
-//    }
-
-//    @Autowired
-//    public SecurityConfig(CustomUserDetailServiceImpl customUserDetailService, UserRepository userRepository,
-//                          JwtAuthenticationEntryPoint unauthorizedHandler, JwtAuthenticationFilter jwtAuthenticationFilter) {
-//        this.customUserDetailService = customUserDetailService;
-//        this.unauthorizedHandler = unauthorizedHandler;
-//        //this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-////                .cors(withDefaults())
-//                .csrf().disable()
-////                .exceptionHandling()
-////                .authenticationEntryPoint(unauthorizedHandler)
-////                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeHttpRequests(requests -> requests
-//                        .requestMatchers(GET,
-//                                String.format("%s/**", apiPrefix)).permitAll()
-//                        .requestMatchers(POST,
-//                                String.format("%s/**", apiPrefix)).permitAll()
-//                        .requestMatchers(GET,
-//                                String.format("%s/users/checkUsernameAvailability", apiPrefix)).permitAll()
-//                        .requestMatchers(GET,
-//                                String.format("%s/users/checkEmailAvailability", apiPrefix)).permitAll()
-//                        .anyRequest().permitAll());
-//
-//        http
-//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                //.formLogin(withDefaults())
-//                .httpBasic(withDefaults());
-//        return http.build();
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**")
                         .permitAll()
-                        //.requestMatchers("api/admin").hasAnyAuthority(RoleName.SYSTEM_ADMIN.name())
+                        .requestMatchers("api/admin").hasAnyAuthority(Role.SYSTEM_ADMIN.name())
                         .requestMatchers("api/user").hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
 

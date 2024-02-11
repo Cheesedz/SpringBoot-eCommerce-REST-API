@@ -1,9 +1,11 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @NoArgsConstructor
 @Table(name = "cartItems",uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class CartItems {
@@ -25,38 +27,6 @@ public class CartItems {
     public CartItems(Long cartID, Long productID, Long quantity) {
         this.cartID = cartID;
         this.productID = productID;
-        this.quantity = quantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getCartID() {
-        return cartID;
-    }
-
-    public void setCartID(Long cartID) {
-        this.cartID = cartID;
-    }
-
-    public Long getProductID() {
-        return productID;
-    }
-
-    public void setProductID(Long productID) {
-        this.productID = productID;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

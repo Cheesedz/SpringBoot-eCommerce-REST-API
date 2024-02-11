@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ResponseEntity<ResponseObject> addOrder(Order newOrder, Long userID) {
-        Optional<Order> foundOrders = orderRepository.findById(newOrder.getOrderNumber());
+        Optional<Order> foundOrders = orderRepository.findById(newOrder.getOrderID());
         if (foundOrders.isPresent()) {
             logger.info("Failed to insert data: " + newOrder);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(

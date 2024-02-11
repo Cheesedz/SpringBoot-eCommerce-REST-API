@@ -1,10 +1,12 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Data
 @Table(name = "shop", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Shop {
     @Id
@@ -36,78 +38,6 @@ public class Shop {
         this.followers = followers;
         this.following = following;
         this.joiningDate = joiningDate;
-        this.chatPerformance = chatPerformance;
-    }
-
-    public Long getShopID() {
-        return shopID;
-    }
-
-    public void setShopID(Long shopID) {
-        this.shopID = shopID;
-    }
-
-    public String getTypeOfShop() {
-        return typeOfShop;
-    }
-
-    public void setTypeOfShop(String typeOfShop) {
-        this.typeOfShop = typeOfShop;
-    }
-
-    public String getTypeOfProduct() {
-        return typeOfProduct;
-    }
-
-    public void setTypeOfProduct(String typeOfProduct) {
-        this.typeOfProduct = typeOfProduct;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(Long followers) {
-        this.followers = followers;
-    }
-
-    public Long getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(Long following) {
-        this.following = following;
-    }
-
-    public String getJoiningDate() {
-        return joiningDate;
-    }
-
-    public void setJoiningDate(String joiningDate) {
-        this.joiningDate = joiningDate;
-    }
-
-    public Double getChatPerformance() {
-        return chatPerformance;
-    }
-
-    public void setChatPerformance(Double chatPerformance) {
         this.chatPerformance = chatPerformance;
     }
 

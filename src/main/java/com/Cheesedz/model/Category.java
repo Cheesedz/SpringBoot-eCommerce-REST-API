@@ -1,9 +1,11 @@
 package com.Cheesedz.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @NoArgsConstructor
 @Table(name = "category", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" })})
 public class Category {
@@ -15,22 +17,6 @@ public class Category {
 
     public Category(String name, String description, String thumbnailPath) {
         this.name = name;
-        this.thumbnailPath = thumbnailPath;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getThumbnailPath() {
-        return thumbnailPath;
-    }
-
-    public void setThumbnailPath(String thumbnailPath) {
         this.thumbnailPath = thumbnailPath;
     }
 
